@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +16,7 @@ import { StartTaskComponent } from './components/start-task/start-task.component
 import { ResultComponent } from './pages/result/result.component';
 import { HeatmapComponent } from './components/heatmap/heatmap.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { ExamplesComponent } from './components/examples/examples.component';
 
 
 @NgModule({
@@ -27,7 +29,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
     PreviousAnalysesComponent,
     StartTaskComponent,
     ResultComponent,
-    HeatmapComponent
+    HeatmapComponent,
+    ExamplesComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,8 @@ import { HighchartsChartModule } from 'highcharts-angular';
     FileUploadModule,
     FormsModule,
     DataTablesModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

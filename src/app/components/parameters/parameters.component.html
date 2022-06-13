@@ -1,44 +1,161 @@
-<form>
+<form name="submission" class="was-validated" #taskForm>
   <div class="row">
     <div class="mb-3">
       <app-file-upload></app-file-upload>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3 mb-3">
-      <label for="exampleInputPassword1" class="form-label">Alpha</label>
-      <input
-        type="number"
-        class="form-control"
-        id="inputAlpha"
-        aria-describedby="inputAlphaHelp"
-        [(ngModel)]="alpha"
-        [ngModelOptions]="{standalone: true}"
-        min="0"
-        max="1"
-        step="0.1"
-      />
-      <div id="inputAlphaHelp" class="form-text">
-        Alpha value influences... .
-      </div>
+    <div class="col-md-4 lead" [ngClass]="taskForm.classList.contains('ng-valid') ? 'text-success' : 'text-danger'">
+      2. Set parameters
     </div>
-    <div class="col-md-3 mb-3">
-      <label for="exampleInputPassword1" class="form-label">Seed</label>
-      <input
-        type="number"
-        class="form-control"
-        id="inputSeed"
-        aria-describedby="inputSeedHelp"
-        [(ngModel)]="seed"
-        [ngModelOptions]="{standalone: true}"
-      />
-      <div id="inputSeedHelp" class="form-text">Random seed for ... .</div>
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="selectBinarizationMethod" class="form-label"
+            >Binarization Method</label
+          >
+          <select
+            class="form-select"
+            aria-label="Binarization method"
+            id="selectBinarizationMethod"
+            [(ngModel)]="selectedBinarizationMethod"
+            name="binarization"
+            #selectBinarizationMethod
+          >
+            <option value="GMM">GMM</option>
+            <option value="Jenks">Jenks</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="inputPValue" class="form-label">P-value</label>
+          <input
+            type="number"
+            class="form-control"
+            id="inputPValue"
+            aria-describedby="inputPValueHelp"
+            [(ngModel)]="pValue"
+            min="0"
+            max="1"
+            step="0.001"
+            name="p-value"
+            required
+            #inputPValue
+          />
+          <div id="inputPValueHelp" class="form-text">
+            P-value for binarization
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="selectClusteringMethod" class="form-label"
+            >Clustering Method</label
+          >
+          <select
+            class="form-select"
+            aria-label="Clustering method"
+            id="selectClusteringMethod"
+            [(ngModel)]="selectedClusteringMethod"
+            name="clustering"
+            #selectClusteringMethod
+          >
+            <option value="Louvain" selected>Louvain</option>
+            <option value="WGCNA">WGCNA</option>
+            <option value="DESMOND">DESMOND</option>
+          </select>
+        </div>
+        <div
+          class="col-md-6 mb-3"
+          *ngIf="selectedClusteringMethod == 'DESMOND'"
+        >
+          <label for="inputAlpha" class="form-label">Alpha</label>
+          <input
+            type="number"
+            class="form-control"
+            id="inputAlpha"
+            aria-describedby="inputAlphaHelp"
+            [(ngModel)]="alpha"
+            min="0"
+            max="1"
+            step="0.1"
+            name="alpha"
+            required
+            #inputAlpha
+          />
+          <div id="inputAlphaHelp" class="form-text">
+            Alpha value influences... .
+          </div>
+        </div>
+        <div
+          class="col-md-6 mb-3"
+          *ngIf="selectedClusteringMethod == 'Louvain'"
+        >
+          <label for="inputR" class="form-label">r</label>
+          <input
+            type="number"
+            class="form-control"
+            id="inputR"
+            aria-describedby="inputRHelp"
+            [(ngModel)]="r"
+            min="0"
+            max="1"
+            step="0.1"
+            name="r"
+            required
+            #inputR
+          />
+          <div id="inputRHelp" class="form-text">
+            Minimal pearson correlation.
+          </div>
+        </div>
+      </div>
+      <div clas="row">
+        <div class="col-md-6 mb-3 mx-auto">
+          <label for="exampleInputPassword1" class="form-label">Seed</label>
+          <input
+            type="number"
+            class="form-control"
+            id="inputSeed"
+            aria-describedby="inputSeedHelp"
+            [(ngModel)]="seed"
+            name="seed"
+            min="1"
+            max="999"
+            #inputSeed
+          />
+          <div class="invalid-feedback">Provide a seed from 1 to 999.</div>
+
+          <div id="inputSeedHelp" class="form-text">Random seed for ... .</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-    <label class="form-check-label" for="exampleCheck1">Use some special feature</label>
+  <div class="row">
+    <div
+      class="col-md-4 lead mb-3"
+      [ngClass]="{ 'text-success': validateEmail(email), 'text-danger': email && !validateEmail(email) }"
+    >
+      3. Email address (optional)
+      <i
+        class="bi bi-info-circle text-info"
+        placement="top"
+        ngbTooltip="The email address will only be used to notify you upon finalization of the task."
+      ></i>
+    </div>
+    <div class="col-md-8 mb-3">
+      <label for="inputR" class="form-label"></label>
+      <input
+        #inputEmail
+        type="email"
+        class="form-control"
+        id="email"
+        [(ngModel)]="email"
+        placeholder="email@domain.com"
+        name="email"
+      />
+      <div class="invalid-feedback">Provide a valid email address.</div>
+    </div>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>

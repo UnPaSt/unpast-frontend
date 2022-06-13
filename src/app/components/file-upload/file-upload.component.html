@@ -1,83 +1,95 @@
 <div class="row">
-  <div class="col-md-12">
-    <table class="table">
-      <thead>
-        <tr>
-          <th width="50%">Name</th>
-          <th>Size</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of uploader.queue">
-          <td>
-            <strong>{{ item?.file?.name }}</strong>
-          </td>
-          <td *ngIf="uploader.options.isHTML5" nowrap>
-            {{ item?.file?.size / 1024 / 1024 | number: ".2" }} MB
-          </td>
-          <td class="text-center">
-            <span *ngIf="fileIsUploaded"
-              ><i class="bi bi-check-circle text-success"></i></span>
-            <span *ngIf="!uploader.queue.length && !fileIsUploaded"
-              ><i class="bi bi-x-circle text-danger"></i></span>
-            <span *ngIf="uploader.queue.length && !fileIsUploaded"
-              ><i class="bi bi-hourglass text-warning"></i></span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
   <div class="col-md-4">
-    Select your file
-    <input type="file" ng2FileSelect [uploader]="uploader" />
+    <div class="lead" [ngClass]="{'text-warning': !fileIsUploaded, 'text-success': fileIsUploaded}">1. Upload expression matrix <i class="bi bi-info-circle text-info" placement="top" ngbTooltip="A tab-separated file with z-scores of gene expressions. The first column and rows contain gene and sample names, respectively."></i></div>
+      <p class="fw-lighter">Rows = Genes <br> Columns = Samples</p>
   </div>
-  <div class="col-md-4">
-    <div
-      ng2FileDrop
-      [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
-      (fileOver)="fileOverBase($event)"
-      [uploader]="uploader"
-      class="file-drop-zone"
-    >
-      or drop your file here
+  <div class="col-md-8">
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table" *ngIf="uploader.queue.length">
+          <thead>
+            <tr>
+              <th width="50%">Name</th>
+              <th>Size</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of uploader.queue">
+              <td>
+                <strong>{{ item?.file?.name }}</strong>
+              </td>
+              <td *ngIf="uploader.options.isHTML5" nowrap>
+                {{ item?.file?.size / 1024 / 1024 | number: ".2" }} MB
+              </td>
+              <td class="text-center">
+                <span *ngIf="fileIsUploaded"
+                  ><i class="bi bi-check-circle text-success"></i
+                ></span>
+                <span *ngIf="!uploader.queue.length && !fileIsUploaded"
+                  ><i class="bi bi-x-circle text-danger"></i
+                ></span>
+                <span *ngIf="uploader.queue.length && !fileIsUploaded"
+                  ><i class="bi bi-hourglass text-warning"></i
+                ></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-  <div class="col-md-4">
-    <div class="btn-group" role="group" aria-label="Upload control">
-      <button
-        type="button"
-        class="btn btn-success btn-s"
-        (click)="uploader.uploadAll(); fileIsUploaded=true;"
-        [disabled]="!uploader.getNotUploadedItems().length"
-      >
-        <span class="glyphicon glyphicon-upload"></span> Upload
-      </button>
-      <button
-        type="button"
-        class="btn btn-warning btn-s"
-        (click)="uploader.cancelAll(); fileIsUploaded=false"
-        [disabled]="!uploader.isUploading"
-      >
-        <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-      </button>
-      <button
-        type="button"
-        class="btn btn-danger btn-s"
-        (click)="uploader.clearQueue(); fileIsUploaded=false;"
-        [disabled]="!uploader.queue.length"
-      >
-        <span class="glyphicon glyphicon-trash"></span> Remove
-      </button>
-    </div>
-    <div>
-      Progress:
-      <div class="progress">
+    <div class="row">
+      <div class="col-md-12" *ngIf="!uploader.queue.length">
+        <!-- Select your expression matrix -->
+        <input type="file" ng2FileSelect [uploader]="uploader" />
+        <hr />
         <div
-          class="progress-bar"
-          role="progressbar"
-          [ngStyle]="{ width: uploader.progress + '%' }"
-        ></div>
+          ng2FileDrop
+          [ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
+          (fileOver)="fileOverBase($event)"
+          [uploader]="uploader"
+          class="file-drop-zone"
+        >
+          or drop your file here
+        </div>
+      </div>
+      <div class="col-md-12" *ngIf="uploader.queue.length">
+        <div class="btn-group" role="group" aria-label="Upload control">
+          <button
+            type="button"
+            class="btn btn-success btn-s"
+            (click)="uploader.uploadAll(); fileIsUploaded = true"
+            [disabled]="!uploader.getNotUploadedItems().length"
+          >
+            <span class="glyphicon glyphicon-upload"></span> Upload
+          </button>
+          <button
+            type="button"
+            class="btn btn-warning btn-s"
+            (click)="uploader.cancelAll(); fileIsUploaded = false"
+            [disabled]="!uploader.isUploading"
+          >
+            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger btn-s"
+            (click)="uploader.clearQueue(); fileIsUploaded = false"
+            [disabled]="!uploader.queue.length"
+          >
+            <span class="glyphicon glyphicon-trash"></span> Remove
+          </button>
+        </div>
+        <div>
+          Progress:
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              [ngStyle]="{ width: uploader.progress + '%' }"
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
