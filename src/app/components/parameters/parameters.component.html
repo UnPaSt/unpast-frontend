@@ -1,0 +1,44 @@
+<form>
+  <div class="row">
+    <div class="mb-3">
+      <app-file-upload></app-file-upload>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      <label for="exampleInputPassword1" class="form-label">Alpha</label>
+      <input
+        type="number"
+        class="form-control"
+        id="inputAlpha"
+        aria-describedby="inputAlphaHelp"
+        [(ngModel)]="alpha"
+        [ngModelOptions]="{standalone: true}"
+        min="0"
+        max="1"
+        step="0.1"
+      />
+      <div id="inputAlphaHelp" class="form-text">
+        Alpha value influences... .
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="exampleInputPassword1" class="form-label">Seed</label>
+      <input
+        type="number"
+        class="form-control"
+        id="inputSeed"
+        aria-describedby="inputSeedHelp"
+        [(ngModel)]="seed"
+        [ngModelOptions]="{standalone: true}"
+      />
+      <div id="inputSeedHelp" class="form-text">Random seed for ... .</div>
+    </div>
+  </div>
+
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+    <label class="form-check-label" for="exampleCheck1">Use some special feature</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
