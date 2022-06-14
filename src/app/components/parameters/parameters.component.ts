@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { TaskService } from 'src/app/services/task/task.service';
 
 @Component({
   selector: 'app-parameters',
@@ -10,14 +11,7 @@ export class ParametersComponent implements OnInit {
   @ViewChild('inputEmail') inputEmail!: ElementRef;
   @ViewChild('taskForm') taskForm!: ElementRef;
 
-  // @ViewChild('inputPValue') inputPValue!: ElementRef;
-  // @ViewChild('selectBinarizationMethod') selectBinarizationMethod!: ElementRef;
-  // @ViewChild('selectClusteringMethod') selectClusteringMethod!: ElementRef;
-  // @ViewChild('inputAlpha') inputAlpha!: ElementRef;
-  // @ViewChild('inputR') inputR!: ElementRef;
-  // @ViewChild('inputSeed') inputSeed!: ElementRef;
-
-  constructor() { }
+  constructor(public taskService: TaskService) { }
 
 
   public seed: number = Math.floor(Math.random() * 100);
@@ -32,9 +26,21 @@ export class ParametersComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  public validateParameters() {
+    console.log('here')
+    this.paramtersValid = this.taskForm.nativeElement.classList.contains('ng-valid');
+  }
+
   public validateEmail(email: string) {
     const res = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return res.test(String(email).toLowerCase());
+  }
+
+  public submit() {
+    console.log('submitting')
+    this.taskService.submitTask();
+    this.taskService.triggerLandingPageFeedback();
+
   }
 
 }

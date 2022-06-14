@@ -1,25 +1,48 @@
-<div class="px-4 py-5 my-5 text-center" id="banner">
-    <img class="d-block mx-auto mb-4" src="/assets/desmond.png" alt="" height="200">
-    <!-- <h1 class="display-5 fw-bold">Desmond2</h1> -->
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4">Identification of differentially expressed gene modules in heterogeneous diseases</p>
-      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a href="#start"><button type="button" class="btn btn-primary btn-lg px-4 gap-3">Start</button></a>
-        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Download</button>
-      </div>
+<div class="bg-custom text-light px-4 py-5 my-5 text-center" id="banner">
+  <!-- <img
+    class="d-block mx-auto mb-4"
+    src="/assets/desmond.png"
+    alt=""
+    height="200"
+  /> -->
+  <h1 class="display-5 fw-bold text-white">Encore</h1>
+  <div class="col-lg-8 mx-auto">
+    <p class="lead mb-4">
+      Identification of differentially expressed gene modules in heterogeneous
+      diseases
+    </p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+      <a href="#start"
+        ><button type="button" class="btn btn-outline-primary btn-lg px-4 gap-3">
+          Start
+        </button></a
+      >
+      <button type="button" class="btn btn-outline-light btn-lg px-4">
+        Download
+      </button>
     </div>
   </div>
+</div>
 
-  <div class="container-fluid" id="start">
-    <app-start-task></app-start-task>
-  </div>
+<div class="container-fluid" id="examples">
+  <app-examples></app-examples>
+</div>
 
-  <div class="container-fluid" id="tasks">
-    <app-previous-analyses></app-previous-analyses>
-  </div>
+<div class="container-fluid" id="start">
+  <app-start-task></app-start-task>
+</div>
 
-  <div class="container-fluid" id="examples">
-    <app-examples></app-examples>
-  </div>
+<div class="container-fluid" id="tasks">
+  <app-previous-analyses></app-previous-analyses>
+</div>
 
-  
+
+
+<app-modal
+  [open]="openModal"
+  callbackScrollId="tasks"
+  (updateOpen)="openModal = $event"
+  title="Task submitted"
+  content="Your task was successfully submitted."
+  buttonLabel="Go to your tasks"
+></app-modal>

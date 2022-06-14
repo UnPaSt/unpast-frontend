@@ -4,8 +4,9 @@
       <app-file-upload></app-file-upload>
     </div>
   </div>
+  <hr>
   <div class="row">
-    <div class="col-md-4 lead" [ngClass]="taskForm.classList.contains('ng-valid') ? 'text-success' : 'text-danger'">
+    <div class="col-md-4 lead" [ngClass]="paramtersValid ? 'text-success' : 'text-danger'" >
       2. Set parameters
     </div>
     <div class="col-md-8">
@@ -40,6 +41,7 @@
             name="p-value"
             required
             #inputPValue
+            (change)="validateParameters()"
           />
           <div id="inputPValueHelp" class="form-text">
             P-value for binarization
@@ -79,6 +81,7 @@
             name="alpha"
             required
             #inputAlpha
+            (change)="validateParameters()"
           />
           <div id="inputAlphaHelp" class="form-text">
             Alpha value influences... .
@@ -101,6 +104,7 @@
             name="r"
             required
             #inputR
+            (change)="validateParameters()"
           />
           <div id="inputRHelp" class="form-text">
             Minimal pearson correlation.
@@ -128,6 +132,7 @@
       </div>
     </div>
   </div>
+  <hr>
 
   <div class="row">
     <div
@@ -156,6 +161,6 @@
     </div>
   </div>
   <div class="col-12">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" (click)="submit()">Submit</button>
   </div>
 </form>

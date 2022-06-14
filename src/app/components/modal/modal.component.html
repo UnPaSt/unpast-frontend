@@ -1,0 +1,21 @@
+<ng-template #modalContainer let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">{{ title }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">{{ content }}</div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close('Save click'); closeModalButton()"
+    >
+      {{ buttonLabel }}
+    </button>
+  </div>
+</ng-template>

@@ -17,6 +17,7 @@ import { ResultComponent } from './pages/result/result.component';
 import { HeatmapComponent } from './components/heatmap/heatmap.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { ExamplesComponent } from './components/examples/examples.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { ExamplesComponent } from './components/examples/examples.component';
     StartTaskComponent,
     ResultComponent,
     HeatmapComponent,
-    ExamplesComponent
+    ExamplesComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
