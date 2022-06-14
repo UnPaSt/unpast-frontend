@@ -6,7 +6,7 @@ import { ViewportScroller } from "@angular/common";
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.less']
+  styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
 

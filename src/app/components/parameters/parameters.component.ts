@@ -4,7 +4,7 @@ import { TaskService } from 'src/app/services/task/task.service';
 @Component({
   selector: 'app-parameters',
   templateUrl: './parameters.component.html',
-  styleUrls: ['./parameters.component.less']
+  styleUrls: ['./parameters.component.scss']
 })
 export class ParametersComponent implements OnInit {
 

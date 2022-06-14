@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-previous-analyses',
   templateUrl: './previous-analyses.component.html',
-  styleUrls: ['./previous-analyses.component.less']
+  styleUrls: ['./previous-analyses.component.scss']
 })
 export class PreviousAnalysesComponent implements OnInit {
 
