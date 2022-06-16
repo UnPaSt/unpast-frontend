@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 
 // const URL = '/api/';
-const URL = 'https://evening-anchorage-3159.herokuapp.com/api/';
+const URL = 'http://localhost:8001/upload_matrix';
 
 @Component({
   selector: 'app-file-upload',
@@ -25,6 +25,7 @@ export class FileUploadComponent {
       url: URL,
       disableMultipart: true, // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
       formatDataFunctionIsAsync: true,
+      authTokenHeader: "",
       formatDataFunction: async (item: any) => {
         return new Promise( (resolve, reject) => {
           resolve({
@@ -36,10 +37,11 @@ export class FileUploadComponent {
         });
       }
     });
+    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false};
  
     this.hasBaseDropZoneOver = false;
     this.hasAnotherDropZoneOver = false;
- 
+
     this.response = '';
  
     this.uploader.response.subscribe( res => this.response = res );
