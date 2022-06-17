@@ -19,7 +19,7 @@ export class FileUploadComponent {
 
   ngOnInit(): void {
   }
- 
+
   constructor (){
     this.uploader = new FileUploader({
       url: URL,
@@ -37,7 +37,7 @@ export class FileUploadComponent {
         });
       }
     });
-    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false};
+    this.uploader.onAfterAddingFile = (file) => {file.withCredentials = false; file.headers.push({name:'Content-Type',value:'application/x-www-form-urlencoded'})};
  
     this.hasBaseDropZoneOver = false;
     this.hasAnotherDropZoneOver = false;
@@ -46,7 +46,7 @@ export class FileUploadComponent {
  
     this.uploader.response.subscribe( res => this.response = res );
   }
- 
+
   public fileOverBase(e:any):void {
     this.hasBaseDropZoneOver = e;
   }
