@@ -17,8 +17,9 @@ export class TaskService {
 
   constructor() { }
 
-  public submitTask() {
-    console.log('task submitted')
+  public submitTask(data: any) {
+    let URL = "http://localhost:8001/run_task"
+    console.log("submitting task to "+URL)
   }
 
   public triggerLandingPageFeedback() {

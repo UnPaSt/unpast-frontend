@@ -1,7 +1,8 @@
 <form name="submission" class="was-validated" #taskForm>
   <div class="row">
     <div class="mb-3">
-      <app-file-upload></app-file-upload>
+<!--      <app-file-upload></app-file-upload>-->
+      <app-file-form (idChange)="setID($event)"></app-file-form>
     </div>
   </div>
   <hr>
