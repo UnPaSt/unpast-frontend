@@ -16,33 +16,28 @@ export class FileFormComponent implements OnInit {
     fileIsUploaded = false;
     URL = 'http://localhost:8001/upload_matrix';
     id = "";
+    file = {name:''};
 
 
     constructor(public fb: FormBuilder, private http: HttpClient) {
-        this.form = this.fb.group({file: [null]})
     }
 
     ngOnInit() {
+        this.form = this.fb.group({
+            file: ['']
+        });
     }
 
     upload({event}: { event: any }) {
-        // @ts-ignore
-        const file = (event.target as HTMLInputElement).files[0];
-        this.form.patchValue({
-            file: file
-        });
-        // @ts-ignore
-        this.form.get('file').updateValueAndValidity()
+        if (event.target.files.length > 0) {
+            this.file = event.target.files[0];
+        }
     }
 
     submit() {
-        var formData: any = new FormData();
-        // @ts-ignore
-        formData.append("file", this.form.get('file').value);
+        const formData: any = new FormData();
+        formData.append("file", this.file, this.file.name);
 
-        let headers = ["Content-Type: application/x-www-form-urlencoded"]
-
-        // @ts-ignore
         this.http.post(this.URL, formData).subscribe(
             (response) => {
                 // @ts-ignore
