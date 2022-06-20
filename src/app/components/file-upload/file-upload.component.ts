@@ -40,7 +40,7 @@ export class FileUploadComponent {
 
     this.uploader
 
-    this.uploader.onAfterAddingFile = (file) => {file.withCredentials = false; file.headers.push({name:'Content-Type',value:'application/x-www-form-urlencoded'})};
+    this.uploader.onAfterAddingFile = (file) => {file.withCredentials = false};
     this.hasBaseDropZoneOver = false;
     this.hasAnotherDropZoneOver = false;
 
