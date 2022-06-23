@@ -1,4 +1,4 @@
-<div class="bg-custom text-light px-4 py-5 my-5 text-center" id="banner">
+<div class="bg-custom text-light px-4 py-5 mb-5 text-center">
   <!-- <img
     class="d-block mx-auto mb-4"
     src="/assets/desmond.png"
@@ -15,11 +15,13 @@
       <a href="#start"
         ><button type="button" class="btn btn-primary btn-lg px-4 gap-3">
           Start
-        </button></a
-      >
-      <button type="button" class="btn btn-outline-light btn-lg px-4">
-        Download
-      </button>
+        </button>
+      </a>
+      <a target="_blank" href="https://github.com/ozolotareva/DESMOND2">
+        <button type="button" class="btn btn-outline-light btn-lg px-4">
+          <i class="bi bi-github"></i>&nbsp;Github
+        </button>
+      </a>
     </div>
   </div>
 </div>
@@ -36,13 +38,15 @@
   <app-previous-analyses></app-previous-analyses>
 </div>
 
-
-
 <app-modal
   [open]="openModal"
   callbackScrollId="tasks"
   (updateOpen)="openModal = $event"
   title="Task submitted"
-  content="Your task was successfully submitted."
+  content="Your task with the ID <b>{{
+    taskId
+  }}</b> was successfully submitted. <br> If you entered your Email, you will receive a notification when the task is completed. Additionally, the task will be listed in the task list and can be accessed here: <a target='_blank' href=http://localhost:64088/result/{{
+    taskId
+  }}>http://localhost:4200/result/{{ taskId }}</a>"
   buttonLabel="Go to your tasks"
 ></app-modal>

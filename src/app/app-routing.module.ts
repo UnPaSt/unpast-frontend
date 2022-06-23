@@ -6,7 +6,7 @@ import { ResultComponent } from './pages/result/result.component';
 const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'home', component: LandingComponent },
-  { path: 'result', component: ResultComponent },
+  { path: 'result/:key', component: ResultComponent },
 ];
 
 @NgModule({

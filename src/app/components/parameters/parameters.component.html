@@ -1,14 +1,17 @@
 <form name="submission" class="was-validated" #taskForm>
   <div class="row">
     <div class="mb-3">
-<!--      <app-file-upload></app-file-upload>-->
-      <app-file-form (idChange)="setID($event)"></app-file-form>
+      <!--      <app-file-upload></app-file-upload>-->
+      <app-file-form (idChange)="setFileId($event)"></app-file-form>
     </div>
   </div>
-  <hr>
+  <hr />
   <div class="row">
-    <div class="col-md-4 lead" [ngClass]="paramtersValid ? 'text-success' : 'text-danger'" >
-      2. Set parameters
+    <div
+      class="col-md-4 lead"
+      [ngClass]="paramtersValid ? 'text-success' : 'text-danger'"
+    >
+      2. Parameters
     </div>
     <div class="col-md-8">
       <div class="row">
@@ -123,22 +126,26 @@
             [(ngModel)]="seed"
             name="seed"
             min="1"
-            max="999"
+            max="9999"
             #inputSeed
+            (change)="validateParameters()"
           />
-          <div class="invalid-feedback">Provide a seed from 1 to 999.</div>
+          <div class="invalid-feedback">Provide a seed from 1 to 9999.</div>
 
           <div id="inputSeedHelp" class="form-text">Random seed for ... .</div>
         </div>
       </div>
     </div>
   </div>
-  <hr>
+  <hr />
 
   <div class="row">
     <div
       class="col-md-4 lead mb-3"
-      [ngClass]="{ 'text-success': validateEmail(email), 'text-danger': email && !validateEmail(email) }"
+      [ngClass]="{
+        'text-success': validateEmail(email),
+        'text-danger': email && !validateEmail(email)
+      }"
     >
       3. Email address (optional)
       <i
@@ -148,7 +155,6 @@
       ></i>
     </div>
     <div class="col-md-8 mb-3">
-      <label for="inputR" class="form-label"></label>
       <input
         #inputEmail
         type="email"
@@ -162,6 +168,13 @@
     </div>
   </div>
   <div class="col-12">
-    <button type="submit" class="btn btn-primary" (click)="submit()">Submit</button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      (click)="submit()"
+      [disabled]="!(paramtersValid && fileId)"
+    >
+      Submit
+    </button>
   </div>
 </form>

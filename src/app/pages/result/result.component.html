@@ -1,2 +1,38 @@
+<div
+  class="text-light px-4 py-5 mb-5 text-center"
+  [ngClass]="{
+    'bg-success': taskData.status == 'Done',
+    'bg-warning': taskData.status == 'Running'
+  }"
+>
+  <h1 class="display-5 fw-bold text-white">
+    Task Status: {{ taskData.status }}
+  </h1>
+</div>
 
-<app-heatmap></app-heatmap>
+<div class="container-fluid px-4 py-5 text-center">
+  <h1 class="display-8 fw-bold">Task Parameters</h1>
+  <div class="col-lg-8 mx-auto">
+    <app-parameters
+      [seed]="taskData.query.seed"
+      [alpha]="taskData.query.alpha"
+      [pValue]="taskData.query.pValue"
+      [selectedBinarizationMethod]="taskData.query.binarization"
+      [selectedClusteringMethod]="taskData.query.clustering"
+      [r]="taskData.query.r"
+      [email]="taskData.query.mail"
+    ></app-parameters>
+  </div>
+</div>
+
+<div class="container-fluid px-4 py-5 text-center" *ngIf="taskData.result">
+  <div class="rows">
+    <div class="row">
+      <app-bicluster-table [result]="taskData.result"></app-bicluster-table>
+    </div>
+  </div>
+
+  <div class="container-fluid px-4 py-5 text-center">
+    <app-heatmap></app-heatmap>
+  </div>
+</div>

@@ -1,6 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
+import { lastValueFrom } from 'rxjs';
+import { BackendControllerService } from 'src/app/services/backend-controller/backend-controller.service';
 
 
 @Component({
@@ -14,12 +16,12 @@ export class FileFormComponent implements OnInit {
     // @ts-ignore
     form: FormGroup;
     fileIsUploaded = false;
-    URL = 'http://localhost:8001/upload_matrix';
     id = "";
     file = {name:''};
+    isUploading = false;
 
 
-    constructor(public fb: FormBuilder, private http: HttpClient) {
+    constructor(public fb: FormBuilder, private http: HttpClient, private backend: BackendControllerService) {
     }
 
     ngOnInit() {
@@ -28,23 +30,22 @@ export class FileFormComponent implements OnInit {
         });
     }
 
-    upload({event}: { event: any }) {
+    public selectFile({event}: { event: any }) {
         if (event.target.files.length > 0) {
             this.file = event.target.files[0];
+            console.log(this.file)
         }
     }
 
-    submit() {
+    public async upload() {
+        this.isUploading = true;
         const formData: any = new FormData();
         formData.append("file", this.file, this.file.name);
-
-        this.http.post(this.URL, formData).subscribe(
-            (response) => {
-                // @ts-ignore
-                this.idChange.emit(response.id);
-            },
-            (error) => console.log(error)
-        )
+        const response = await this.backend.uploadFile(formData);
+        // @ts-ignore
+        this.idChange.emit(response.id);
+        this.fileIsUploaded = true;
+        this.isUploading = false;
     }
 
 }

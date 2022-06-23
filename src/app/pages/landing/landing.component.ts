@@ -9,14 +9,14 @@ import { TaskService } from 'src/app/services/task/task.service';
 export class LandingComponent implements OnInit {
 
   public openModal = false;
+  public taskId = '';
 
   constructor(private taskService: TaskService) { }
 
   ngOnInit(): void {
-    this.taskService._landingPageFeedback$.subscribe((bool) => {
-      if (bool) {
-        this.openModalFun()
-      }
+    this.taskService._landingPageFeedback$.subscribe((taskId) => {
+      this.taskId = taskId;
+      this.openModalFun()
     });
   }
 

@@ -1,6 +1,6 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {TaskService} from 'src/app/services/task/task.service';
-import {HttpClient} from "@angular/common/http";
+import { BinarizationAlgorithm, ClusteringAlgorithm, TaskParameters } from 'src/app/interfaces';
 
 @Component({
     selector: 'app-parameters',
@@ -15,15 +15,15 @@ export class ParametersComponent implements OnInit {
     constructor(public taskService: TaskService) {
     }
 
-    public id: string = ""
+    @Input() public fileId: string = ""
+    @Input() public seed: number = Math.floor(Math.random() * 100);
+    @Input() public alpha: number = 0.5;
+    @Input() public pValue: number = 0.001;
+    @Input() public selectedBinarizationMethod: BinarizationAlgorithm = 'GMM';
+    @Input() public selectedClusteringMethod: ClusteringAlgorithm = 'Louvain';
+    @Input() public r: number = 0.3;
+    @Input() public email: string = ''
 
-    public seed: number = Math.floor(Math.random() * 100);
-    public alpha: number = 0.5;
-    public pValue: number = 0.001;
-    public selectedBinarizationMethod: string = 'GMM';
-    public selectedClusteringMethod: string = 'Louvain';
-    public r: number = 0.3;
-    public email: string = ''
     public paramtersValid = true;
 
     ngOnInit(): void {
@@ -31,6 +31,7 @@ export class ParametersComponent implements OnInit {
 
     public validateParameters() {
         this.paramtersValid = this.taskForm.nativeElement.classList.contains('ng-valid');
+        console.log(this.paramtersValid)
     }
 
     public validateEmail(email: string) {
@@ -38,9 +39,9 @@ export class ParametersComponent implements OnInit {
         return res.test(String(email).toLowerCase());
     }
 
-    public getRequestData(): any {
+    public getRequestData(): TaskParameters {
         return {
-            id: this.id,
+            id: this.fileId,
             seed: this.seed,
             alpha: this.alpha,
             pValue: this.pValue,
@@ -51,13 +52,13 @@ export class ParametersComponent implements OnInit {
         }
     }
 
-    public submit() {
-        this.taskService.submitTask(this.getRequestData());
-        this.taskService.triggerLandingPageFeedback();
+    public async submit() {
+        const taskId = await this.taskService.submitTask(this.getRequestData());
+        this.taskService.triggerLandingPageFeedback(taskId);
     }
 
-    public setID(id: string) {
-        this.id = id
+    public setFileId(id: string) {
+        this.fileId = id;
     }
 
 }

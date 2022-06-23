@@ -1,0 +1,42 @@
+<div class="px-4 pt-5 my-5 text-center">
+  <h1 class="display-4 fw-bold">Your Tasks</h1>
+  <div class="col-lg-8 mx-auto">
+    <p class="lead mb-4">Review finished tasks and inspect their results</p>
+    <table
+      datatable
+      [dtOptions]="dtOptions"
+      [dtTrigger]="dtTrigger"
+      class="table table-striped row-border hover"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Binarization</th>
+          <th>Clustering</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="!taskList.length">
+        <tr></tr>
+      </tbody>
+
+      <tbody *ngIf="taskList.length">
+        <tr *ngFor="let a of taskList">
+          <td>{{ a.id }}</td>
+          <td>{{ a.status }}</td>
+          <td>{{ a.query.binarization }}</td>
+          <td>{{ a.query.clustering }}</td>
+          <td>
+            <a target="_blank" href="{{'/result/'+a.id}}"
+              ><button type="button" class="btn btn-success">Open</button>
+            </a>
+            <button type="button" class="btn btn-danger">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

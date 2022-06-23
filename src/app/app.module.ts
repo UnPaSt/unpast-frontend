@@ -11,15 +11,16 @@ import {ParametersComponent} from './components/parameters/parameters.component'
 import {FileUploadComponent} from './components/file-upload/file-upload.component';
 import {FileUploadModule} from 'ng2-file-upload';
 import {NavbarComponent} from './components/navbar/navbar.component';
-import {PreviousAnalysesComponent} from './components/previous-analyses/previous-analyses.component';
-import {StartTaskComponent} from './components/start-task/start-task.component';
+import {PreviousAnalysesComponent} from './pages/landing/components/previous-analyses/previous-analyses.component';
+import {StartTaskComponent} from './pages/landing/components/start-task/start-task.component';
 import {ResultComponent} from './pages/result/result.component';
-import {HeatmapComponent} from './components/heatmap/heatmap.component';
+import {HeatmapComponent} from './pages/result/components/heatmap/heatmap.component';
 import {HighchartsChartModule} from 'highcharts-angular';
-import {ExamplesComponent} from './components/examples/examples.component';
+import {ExamplesComponent} from './pages/landing/components/examples/examples.component';
 import {ModalComponent} from './components/modal/modal.component';
-import {FileFormComponent} from './components/file-form/file-form.component';
+import {FileFormComponent} from './components/parameters/file-form/file-form.component';
 import {HttpClientModule} from "@angular/common/http";
+import { BiclusterTableComponent } from './pages/result/components/bicluster-table/bicluster-table.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import {HttpClientModule} from "@angular/common/http";
         HeatmapComponent,
         ExamplesComponent,
         ModalComponent,
-        FileFormComponent
+        FileFormComponent,
+        BiclusterTableComponent,
     ],
     imports: [
         BrowserModule,

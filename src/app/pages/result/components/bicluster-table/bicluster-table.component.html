@@ -1,0 +1,28 @@
+<table
+  datatable
+  [dtOptions]="dtOptions"
+  [dtTrigger]="dtTrigger"
+  class="table table-striped row-border hover"
+  style="width: 100%"
+>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>avgSNR</th>
+      <th>#Genes</th>
+      <th>Genes</th>
+      <th>#Samples</th>
+      <th>Samples</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let bicluster of _result | keyvalue">
+      <td>{{ bicluster.key }}</td>
+      <td>{{ bicluster.value.avgSNR }}</td>
+      <td>{{ bicluster.value.n_genes }}</td>
+      <td class="shortenText">{{ bicluster.value.genes }}</td>
+      <td>{{ bicluster.value.n_samples }}</td>
+      <td class="shortenText">{{ bicluster.value.samples }}</td>
+    </tr>
+  </tbody>
+</table>
