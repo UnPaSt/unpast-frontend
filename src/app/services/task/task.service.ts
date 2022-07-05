@@ -47,10 +47,20 @@ export class TaskService {
     const keyList = localStorage.getItem(this.localStorageKey);
     return keyList ? JSON.parse(keyList) : []
   }
+  
+  public async deleteTask(uid: string): Promise<any> {
+    this.taskList = this.taskList.filter(function( obj ) {
+      return obj.id !== uid;
+    });
+    this.storeKeys(this.getTaskKeys())
+    this.triggerTaskListUpdate();
+    const response = this.backend.deleteTask(uid);
+    return
+  }
 
   public async submitTask(data: TaskParameters): Promise<string> {
     const response = await this.backend.runTask(data);
-    this.taskList.push({id: response.id, status: 'Submitted', query: data});
+    this.taskList.push({id: response.id, status: 'Submitted', query: data, created: new Date().getTime()});
     this.storeKeys(this.getTaskKeys())
     this.triggerTaskListUpdate();
     return response.id
@@ -58,6 +68,11 @@ export class TaskService {
 
   public async getTask(id: string): Promise<any> {
     const response = await this.backend.getTask(id);
+    return response
+  }
+
+  public async getTaskData(id: string): Promise<any> {
+    const response = await this.backend.getTaskData(id);
     return response
   }
 

@@ -22,25 +22,78 @@
   <div class="col-md-8">
     <div class="row">
       <div class="col-md-12">
-        <form [formGroup]="form" (ngSubmit)="upload()">
-          <div class="form-group">
+        <form [formGroup]="form">
+          <div class="form-group" *ngIf="!displayedFileName">
             <input
               type="file"
               class="file-upload"
               (change)="selectFile({ event: $event })"
             />
           </div>
-          <div class="form-group">
-            <button class="btn btn-primary" [disabled]="!file.name || isUploading">
-              <span
-                *ngIf="isUploading"
-                class="spinner-border spinner-border-sm"
-                role="status"
-                aria-hidden="true"
-              ></span
-              >Upload
-            </button>
-          </div>
+
+          <table class="table" *ngIf="displayedFileName">
+            <thead>
+              <tr>
+                <th width="50%">Name</th>
+                <th *ngIf="file.size">Size</th>
+                <th>Status</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>{{ displayedFileName }}</strong>
+                </td>
+                <td *ngIf="file.size">
+                  {{ file.size / 1024 / 1024 | number: ".2" }} MB
+                </td>
+                <td class="text-center">
+                  <span *ngIf="fileIsUploaded"
+                    ><i class="bi bi-check-circle text-success"></i
+                  ></span>
+                  <span *ngIf="!fileIsUploaded"
+                    ><i class="bi bi-x-circle text-danger"></i
+                  ></span>
+                  <!-- <span *ngIf="!fileIsUploaded"
+                    ><i class="bi bi-hourglass text-warning"></i
+                  ></span> -->
+                </td>
+                <td>
+                  <div class="btn-group" role="group" aria-label="Options">
+                    <button
+                      class="btn btn-success"
+                      [disabled]="isUploading || fileIsUploaded"
+                      (click)="upload()"
+                      type="button"
+                    >
+                      <span
+                        *ngIf="isUploading"
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      ></span
+                      >Upload
+                    </button>
+                    <button 
+                      *ngIf="fileIsUploaded && file.size === 0"
+                      class="btn btn-warning"
+                      (click)="fileIsUploaded=false; delete()"
+                    >
+                      New
+                    </button>
+                    <button
+                      [disabled]="isUploading"
+                      class="btn btn-danger"
+                      (click)="delete()"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </form>
       </div>
     </div>

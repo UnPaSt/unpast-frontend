@@ -11,7 +11,7 @@
     >
       <thead>
         <tr>
-          <th>ID</th>
+          <th>Submitted</th>
           <th>Status</th>
           <th>Binarization</th>
           <th>Clustering</th>
@@ -25,15 +25,27 @@
 
       <tbody *ngIf="taskList.length">
         <tr *ngFor="let a of taskList">
-          <td>{{ a.id }}</td>
+          <td [attr.data-sort]="a.created">{{ formatDate(a.created) }}</td>
           <td>{{ a.status }}</td>
           <td>{{ a.query.binarization }}</td>
           <td>{{ a.query.clustering }}</td>
           <td>
-            <a target="_blank" href="{{'/result/'+a.id}}"
-              ><button type="button" class="btn btn-success">Open</button>
-            </a>
-            <button type="button" class="btn btn-danger">Delete</button>
+            <div
+              class="btn-group"
+              role="group"
+              aria-label="Options previous tasks"
+            >
+              <a target="_blank" href="{{ '/result/' + a.id }}"
+                ><button type="button" class="btn btn-success">Open</button>
+              </a>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="taskService.deleteTask(a.id)"
+              >
+                Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

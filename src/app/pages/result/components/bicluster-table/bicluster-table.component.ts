@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { TaskResult } from 'src/app/interfaces';
+import { Bicluster, TaskResult } from 'src/app/interfaces';
+import { ResultServiceService } from 'src/app/services/result/result-service.service';
 
 @Component({
   selector: 'app-bicluster-table',
@@ -24,7 +25,7 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
   public dtOptions: DataTables.Settings = {};
   public dtTrigger: Subject<any> = new Subject();
 
-  constructor() { }
+  constructor(private renderer: Renderer2, private resultService: ResultServiceService) { }
 
   ngAfterViewInit(): void {
   }
@@ -54,18 +55,32 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
       language: {
         emptyTable: 'No previous tasks',
         searchPanes: {
-          emptyPanes: 'There are no panes to display. :/'
+          emptyPanes: 'There are no panes to display.'
         }
       },
       buttons: [
         'copy', 'csv', 'excel'
       ]
     });
-
   }
 
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
+  }
+
+  public rowClick(event: any, id: string, bicluster: Bicluster) {
+    if (this.resultService.heatmapIsLoading) {
+      return
+    } 
+    this.resultService.heatmapIsLoading = true;
+    const hasClass = event.target.parentNode.classList.contains('selected');
+    if(hasClass) {
+      this.renderer.removeClass(event.target.parentNode, 'selected');
+      this.resultService.removeBicluster(id);
+    } else {
+      this.renderer.addClass(event.target.parentNode, 'selected');
+      this.resultService.selectBicluster(id, bicluster);
+    }
   }
 
 }

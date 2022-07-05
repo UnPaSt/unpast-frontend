@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { TaskService } from './services/task/task.service';
 
 
 @Component({
@@ -9,7 +10,20 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 export class AppComponent {
   title = 'frontend';
 
-  ngOnInit() {
+  public openModal = false;
+  public taskId = '';
+
+  constructor(private taskService: TaskService) { }
+
+  ngOnInit(): void {
+    this.taskService._landingPageFeedback$.subscribe((taskId) => {
+      this.taskId = taskId;
+      this.openModalFun()
+    });
+  }
+
+  public openModalFun() {
+    this.openModal = true;
   }
 
 }

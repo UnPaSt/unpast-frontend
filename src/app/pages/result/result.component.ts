@@ -14,6 +14,7 @@ export class ResultComponent implements OnInit {
   public taskData: Task = {
     id: '',
     status: '',
+    created: 0,
     query: {
       id: '',
       seed: 0,
@@ -22,11 +23,11 @@ export class ResultComponent implements OnInit {
       binarization: 'GMM',
       clustering: 'DESMOND',
       r: 0,
-      mail: ''
+      mail: '',
+      exprs: ''
     },
   };
-  public allSamples: Set<string> = new Set();
-  public allGenes: Set<string> = new Set();
+  public matrix: any;
 
   constructor(public taskService: TaskService, private route: ActivatedRoute) { }
 
@@ -35,33 +36,10 @@ export class ResultComponent implements OnInit {
       this.key = params['key'];
       this.taskService.getTask(this.key).then(response => {
         this.taskData = response;
-        
-        this.extractFeatureSpace();
+        this.taskData.query.mail = this.taskData.query.mail ? this.taskData.query.mail : '';
       });
     })
   }
-
-
-
-  public extractFeatureSpace() {
-    if (!this.taskData?.result) {
-      return
-    }
-    Object.values(this.taskData.result).forEach((bicluster: Bicluster) => {
-      console.log(bicluster)
-      bicluster.samples.map((sample: string) => {
-        if (!this.allSamples.has(sample)) {
-          this.allSamples.add(sample)
-        }
-      })
-      bicluster.genes.map((gene: string) => {
-        if (!this.allGenes.has(gene)) {
-          this.allGenes.add(gene)
-        }
-      })
-    })
-  }
-
 
 
 }

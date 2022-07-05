@@ -15,7 +15,8 @@ export interface TaskParameters {
     binarization: BinarizationAlgorithm,
     clustering: ClusteringAlgorithm,
     r: number,
-    mail: string
+    mail: string,
+    exprs: string
 }
 
 export interface TaskResult {
@@ -35,7 +36,7 @@ export interface Bicluster {
     gene_indices: number[],
     n_samples: number,
     samples: string[],
-    sample_indexes: number[],
+    sample_indices: number[],
     direction: BiclusterDirecton
 }
 
@@ -46,5 +47,12 @@ export interface Task {
     id: string,
     status: string,
     query: TaskParameters,
+    created: number,
     result?: TaskResult
+}
+
+export interface TaskInputDataRaw {
+    columns: string[],
+    rows: string[],
+    values: any
 }

@@ -8,24 +8,8 @@ import { TaskService } from 'src/app/services/task/task.service';
 })
 export class LandingComponent implements OnInit {
 
-  public openModal = false;
-  public taskId = '';
-
-  constructor(private taskService: TaskService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.taskService._landingPageFeedback$.subscribe((taskId) => {
-      this.taskId = taskId;
-      this.openModalFun()
-    });
   }
-
-  public openModalFun() {
-    this.openModal = true;
-  }
-
-  public scroll(el: HTMLElement) {
-    el.scrollIntoView();
-  }
-
 }

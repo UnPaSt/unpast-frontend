@@ -37,16 +37,3 @@
 <div class="container-fluid" id="tasks">
   <app-previous-analyses></app-previous-analyses>
 </div>
-
-<app-modal
-  [open]="openModal"
-  callbackScrollId="tasks"
-  (updateOpen)="openModal = $event"
-  title="Task submitted"
-  content="Your task with the ID <b>{{
-    taskId
-  }}</b> was successfully submitted. <br> If you entered your Email, you will receive a notification when the task is completed. Additionally, the task will be listed in the task list and can be accessed here: <a target='_blank' href=http://localhost:64088/result/{{
-    taskId
-  }}>http://localhost:4200/result/{{ taskId }}</a>"
-  buttonLabel="Go to your tasks"
-></app-modal>

@@ -23,21 +23,10 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    $.extend(true, $.fn.dataTable.defaults, {
-      pagingType: 'full_numbers',
-      pageLength: 5,
-      processing: true,
-      lengthChange: false,
-      info: false,
-      language: {
-        emptyTable: 'No previous tasks',
-        searchPanes: {
-          emptyPanes: 'There are no panes to display. :/'
-        }
-      }
-    });
+    this.setTableStyle();
 
     this.taskService._taskListUpdate$.subscribe((taskList: Task[]) => {
+      console.log(taskList)
       this.destroyTable();
       this.taskList = taskList;
       if (taskList.length) {
@@ -50,11 +39,35 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
     this.dtTrigger.unsubscribe();
   }
 
+  public setTableStyle() {
+    $.extend(true, $.fn.dataTable.defaults, {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      processing: true,
+      lengthChange: false,
+      info: false,
+      order: [[0, 'desc']],
+      language: {
+        emptyTable: 'No previous tasks',
+        searchPanes: {
+          emptyPanes: 'There are no panes to display. :/'
+        }
+      }
+    });
+  }
+
   public destroyTable() {
     if (this.dtElement?.dtInstance) {
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         dtInstance.destroy();
       })
     }
+  }
+
+  public formatDate(unix_timestamp: number) {
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    const date = new Date(unix_timestamp * 1000);
+    return date.toLocaleString();
   }
 }

@@ -20,6 +20,24 @@ export class BackendControllerService {
     }
   }
 
+  public async deleteTask(taskId: string): Promise<any> {
+    try {
+      const response = lastValueFrom(this.http.get(`${environment.api}remove_task?id=${taskId}`));
+      return response
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  public async deleteFile(fileId: string): Promise<any> {
+    try {
+      const response = lastValueFrom(this.http.get(`${environment.api}remove_matrix?id=${fileId}`));
+      return response
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   public async runTask(params: TaskParameters): Promise<any> {
     try {
       const response = lastValueFrom(this.http.post<any>(`${environment.api}run_task`, params));
@@ -32,6 +50,16 @@ export class BackendControllerService {
   public async getTask(task_id: string): Promise<any> {
     try {
       const response = lastValueFrom(this.http.get<any>(`${environment.api}get_task?id=${task_id}`));
+      return response
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  public async getTaskData(task_id: string): Promise<any> {
+    try {
+      const response = lastValueFrom(this.http.get<any>(`${environment.api}get_task_data?id=${task_id}`));
       return response
     } catch (error) {
       console.log(error);

@@ -15,14 +15,16 @@ export class ParametersComponent implements OnInit {
     constructor(public taskService: TaskService) {
     }
 
-    @Input() public fileId: string = ""
+    @Input() public fileName: string = "";
+    @Input() public fileId: string = "";
     @Input() public seed: number = Math.floor(Math.random() * 100);
     @Input() public alpha: number = 0.5;
     @Input() public pValue: number = 0.001;
     @Input() public selectedBinarizationMethod: BinarizationAlgorithm = 'GMM';
     @Input() public selectedClusteringMethod: ClusteringAlgorithm = 'Louvain';
     @Input() public r: number = 0.3;
-    @Input() public email: string = ''
+    @Input() public email: string = '';
+    @Input() public alreadyOnServer = false;
 
     public paramtersValid = true;
 
@@ -48,11 +50,13 @@ export class ParametersComponent implements OnInit {
             binarization: this.selectedBinarizationMethod,
             clustering: this.selectedClusteringMethod,
             r: this.r,
-            mail: this.email
+            mail: this.email,
+            exprs: this.fileName
         }
     }
 
     public async submit() {
+        console.log(this.getRequestData())
         const taskId = await this.taskService.submitTask(this.getRequestData());
         this.taskService.triggerLandingPageFeedback(taskId);
     }

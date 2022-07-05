@@ -1,15 +1,22 @@
-<highcharts-chart
-[Highcharts]="highcharts"
-[options]="chartOptions"
-style="width: 600px; height: 300px; display: block"
-class="float-start"
->
-</highcharts-chart>
+<div class="heatmap-container">
+  <highcharts-chart
+    [style.width.px]="chartWidth" 
+    [style.height.px]="chartHeight"
+    [Highcharts]="highcharts"
+    [options]="chartOptions"
+    [(update)]="updateFlag"
+    [callbackFunction]="chartCallback"
+    style="display: block"
+    class="float-start"
+  >
+  </highcharts-chart>
 
-<highcharts-chart
-[Highcharts]="highcharts"
-[options]="chartOptionsTree"
-style="width: 600px; height: 300px; display: block"
-class="float-start"
->
-</highcharts-chart>
+  <div class="heatmap-loading" *ngIf="resultService.heatmapIsLoading">
+    <div class="heatmap-loading-background"></div>
+    <div class="d-flex justify-content-center align-middle heatmap-loading-spinner">
+      <div class="spinner-grow heatmap-loading-spinner-element" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+</div>

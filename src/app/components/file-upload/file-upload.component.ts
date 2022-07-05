@@ -32,7 +32,7 @@ export class FileUploadComponent {
             name: item._file.name,
             length: item._file.size,
             contentType: item._file.type,
-            date: new Date()
+            date: new Date(Date.now()/1000)
           });
         });
       }

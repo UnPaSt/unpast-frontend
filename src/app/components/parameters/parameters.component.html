@@ -2,7 +2,7 @@
   <div class="row">
     <div class="mb-3">
       <!--      <app-file-upload></app-file-upload>-->
-      <app-file-form (idChange)="setFileId($event)"></app-file-form>
+      <app-file-form (idChange)="setFileId($event)" [fileName]="fileName" [id]="fileId" [fileIsUploaded]="alreadyOnServer"></app-file-form>
     </div>
   </div>
   <hr />

@@ -1,6 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { HttpClient } from "@angular/common/http";
 import { lastValueFrom } from 'rxjs';
 import { BackendControllerService } from 'src/app/services/backend-controller/backend-controller.service';
 
@@ -15,10 +15,14 @@ export class FileFormComponent implements OnInit {
     @Output() idChange: EventEmitter<string> = new EventEmitter();
     // @ts-ignore
     form: FormGroup;
-    fileIsUploaded = false;
-    id = "";
-    file = {name:''};
+    @Input() fileIsUploaded = false;
+    @Input() id = '';
+    file = { name: '', size: 0 };
     isUploading = false;
+    displayedFileName = '';
+    @Input() set fileName(displayedFileName: string) {
+        this.displayedFileName = displayedFileName;
+    }
 
 
     constructor(public fb: FormBuilder, private http: HttpClient, private backend: BackendControllerService) {
@@ -30,10 +34,10 @@ export class FileFormComponent implements OnInit {
         });
     }
 
-    public selectFile({event}: { event: any }) {
+    public selectFile({ event }: { event: any }) {
         if (event.target.files.length > 0) {
             this.file = event.target.files[0];
-            console.log(this.file)
+            this.displayedFileName = this.file.name;
         }
     }
 
@@ -42,10 +46,20 @@ export class FileFormComponent implements OnInit {
         const formData: any = new FormData();
         formData.append("file", this.file, this.file.name);
         const response = await this.backend.uploadFile(formData);
-        // @ts-ignore
         this.idChange.emit(response.id);
         this.fileIsUploaded = true;
         this.isUploading = false;
+    }
+
+    public async delete() {
+        if (this.fileIsUploaded) {
+            await this.backend.deleteFile(this.id);
+        }
+        this.id = '';
+        this.fileIsUploaded = false;
+        this.file = { name: '', size: 0 };
+        this.displayedFileName = '';
+        this.idChange.emit('');
     }
 
 }

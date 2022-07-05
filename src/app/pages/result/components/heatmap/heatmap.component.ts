@@ -1,188 +1,289 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import Heatmap from 'highcharts/modules/heatmap';
 import More from 'highcharts/highcharts-more';
-import Tree from 'highcharts/modules/treemap';
+import { TaskService } from 'src/app/services/task/task.service';
+import { Bicluster } from 'src/app/interfaces';
+import { ResultServiceService } from 'src/app/services/result/result-service.service';
 
 More(Highcharts);
-Tree(Highcharts);
 Heatmap(Highcharts);
 
 
 @Component({
-  selector: 'app-heatmap',
-  templateUrl: './heatmap.component.html',
-  styleUrls: ['./heatmap.component.scss']
+   selector: 'app-heatmap',
+   templateUrl: './heatmap.component.html',
+   styleUrls: ['./heatmap.component.scss']
 })
 export class HeatmapComponent implements OnInit {
 
-  public chartOptions: any = {};
-  public chartOptionsTree: any = {};
-  public highcharts = Highcharts;
+   public originalData: any = {};
 
-  constructor() { }
+   @Input() set key(value: string) {
+      this.taskService.getTaskData(value).then((response: any) => {
+         this.originalData = JSON.parse(JSON.stringify(response));
+         this.updateHeatmap(response, []);
+         
+      })
+   };
 
-  ngOnInit(): void {
-    this.initChart();
-    this.initChartTree();
-    this.testData();
-  }
+   public chartWidth = 800;
+   public chartHeight = 800;
 
-  private initChart() {
-    this.chartOptions = {   
-       chart : {
-          type: 'heatmap',
-          marginTop: 40,
-          marginBottom: 80
-       },
-       title : {
-          text: 'Sales per employee per weekday'
-       },
-       xAxis : {
-          categories: ['Alexander', 'Marie', 'Maximilian', 'Sophia', 'Lukas',
-             'Maria', 'Leon', 'Anna', 'Tim', 'Laura']
-       },
-       yAxis : {
-          categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-             title: null
-       },
-       colorAxis : {
-          min: 0,
-          minColor: '#FFFFFF',
-          maxColor: '#000000'
-       },
-       legend : {
-          align: 'right',
-          layout: 'vertical',
-          margin: 0,
-          verticalAlign: 'top',
-          y: 25,
-          symbolHeight: 280
-       },
-       tooltip : {
-          formatter: function (): any {
-            // @ts-ignore
-             return '<b>' + this.series.xAxis.categories[this.point.x] +
-                '</b> sold <br><b>' +
-                // @ts-ignore
-                this.point.value +
-                '</b> items on <br><b>' +
-                // @ts-ignore
-                this.series.yAxis.categories[this.point.y] + '</b>';
-          }
-       },
-       series : [{
-          name: 'Sales per employee',
-          borderWidth: 1,
-          data: [[0, 0, 10], [0, 1, 19], [0, 2, 8], [0, 3, 24], [0, 4, 67],
-          [1, 0, 92], [1, 1, 58], [1, 2, 78], [1, 3, 117], [1, 4, 48],
-          [2, 0, 35], [2, 1, 15], [2, 2, 123], [2, 3, 64], [2, 4, 52],
-          [3, 0, 72], [3, 1, 132], [3, 2, 114], [3, 3, 19], [3, 4, 16],
-          [4, 0, 38], [4, 1, 5], [4, 2, 8], [4, 3, 117], [4, 4, 115],
-          [5, 0, 88], [5, 1, 32], [5, 2, 12], [5, 3, 6], [5, 4, 120],
-          [6, 0, 13], [6, 1, 44], [6, 2, 88], [6, 3, 98], [6, 4, 96],
-          [7, 0, 31], [7, 1, 1], [7, 2, 82], [7, 3, 32], [7, 4, 30],
-          [8, 0, 85], [8, 1, 97], [8, 2, 123], [8, 3, 64], [8, 4, 84],
-          [9, 0, 47], [9, 1, 114], [9, 2, 31], [9, 3, 48], [9, 4, 91]],
-          
-          dataLabels: {
-             enabled: true,
-             color: '#000000'
-          }
-       }]
-      
-    };
- 
-  }
-  
+   public matrix: any;
+   public chartOptions: any = {};
+   // public chartOptionsTree: any = {};
+   public highcharts = Highcharts;
+   public heatmapTestData: any = [];
+   public updateFlag = false;
+   public chart: any;
+   public self: any;
 
-  private initChartTree() {
-    
-    this.chartOptionsTree = {   
-       chart : {
-          type: 'treemap',
-          layoutAlgorithm: 'squarified',
-          marginTop: 40,
-          marginBottom: 80,
-          allowDrillToNode: true,
-            animationLimit: 1000,
-            dataLabels: {
-                enabled: false
+   public chartData = {
+      columns: ['placeholder'],
+      rows: ['placeholder'],
+      values: [[0, 0, 10]],
+   };
+
+   constructor(public taskService: TaskService, public resultService: ResultServiceService) {
+    }
+
+   ngOnInit(): void {
+      this.self = this;
+
+      this.initChart();
+
+      this.resultService._biclusterSelected$.subscribe((biclusters: Bicluster[]) => {
+         console.log('new click')
+         console.log(biclusters)
+
+         this.updateHeatmap(this.chartData, biclusters);
+       });
+   }
+
+   public chartCallback(chart: any) {
+      // this.chart = chart;
+      // this.chart.reflow();
+   }
+
+   public removeLastOccurenceByValue(array: any[], value: any) {
+      const index = array.lastIndexOf(value);
+      if (index !== -1) {
+         array.splice(index, 1);
+      }
+      return array
+   }
+
+   public updateHeatmap(data: any, biclusters: Bicluster[]) {
+
+      /** Wrapper of heatmap update functions to show loading */
+      this.resultService.heatmapIsLoading = true;
+      setTimeout(() => {
+         this.formatHeatmapData(data, biclusters);
+         this.resultService.heatmapIsLoading = false;
+      })
+   }
+
+   public formatHeatmapData(data: any, biclusters: Bicluster[]) {
+
+      const selectedSamples = Object.values(biclusters).map(bicluster => bicluster.samples);
+      const selectedGenes = Object.values(biclusters).map(bicluster => bicluster.genes);
+      // const selectedSamplesIndices = Object.values(biclusters).map(bicluster => bicluster.sample_indices);
+      // const selectedGenesIndices = Object.values(biclusters).map(bicluster => bicluster.gene_indices);
+
+      const selectedColumns = [...new Set(selectedSamples.flat(1))];
+      const selectedRows = [...new Set(selectedGenes.flat(1))];
+      // const selectedColumnsIndices = [...new Set(selectedSamplesIndices.flat(1))];
+      // const selectedRowsIndices = [...new Set(selectedGenesIndices.flat(1))];
+
+      // // descending order
+      // selectedColumnsIndices.sort(function(a,b){ return b - a; });
+      // selectedRowsIndices.sort(function(a,b){ return b - a; });
+
+      if (selectedColumns) {
+         let columnsSorted: any = JSON.parse(JSON.stringify(selectedColumns));
+         columnsSorted.push(...data.columns);
+         for (const value of selectedColumns) {
+            columnsSorted = this.removeLastOccurenceByValue(columnsSorted, value);
+         }
+         data.columns = columnsSorted;
+      }
+
+      if (selectedRows) {
+         let rowsSorted: any = JSON.parse(JSON.stringify(selectedRows));
+         rowsSorted.push(...data.rows);
+         for (const value of selectedRows) {
+            rowsSorted = this.removeLastOccurenceByValue(rowsSorted, value);
+         }
+         data.rows = rowsSorted;
+      }
+
+      const columnLookup: any = {};
+      for (const i in data.columns) {
+         columnLookup[data.columns[i]] = parseInt(i);
+      }
+
+      const rowLookup: any = {};
+      for (const i in data.rows) {
+         rowLookup[data.rows[i]] = parseInt(i);
+      }
+
+      const valuesFormatted: any = [];
+      for (const value of this.originalData.values) {
+         const row = rowLookup[value[0]];
+         const column = columnLookup[value[1]];
+         valuesFormatted.push([row, column, value[2]]);
+      }
+
+      data.values = valuesFormatted;
+      this.chartData = data;
+
+      this.chartOptions.yAxis.categories = this.chartData.columns;
+      this.chartOptions.xAxis.categories = this.chartData.rows;
+      this.chartOptions.series[0].data = this.chartData.values;
+
+      if (selectedColumns.length) {
+         this.chartOptions.yAxis.plotLines = [{
+            width: 2,
+            color: '#ff0000',
+            value: selectedColumns.length-0.5,
+            zIndex: 3
+          }]
+      } else {
+         this.chartOptions.yAxis.plotLines = [];
+      }
+
+      if (selectedRows.length) {
+         this.chartOptions.xAxis.plotLines = [{
+            width: 2,
+            color: '#ff0000',
+            value: selectedRows.length-0.5,
+            zIndex: 3
+          }]
+      } else {
+         this.chartOptions.xAxis.plotLines = [];
+      }
+
+      this.chartHeight = this.chartData.rows.length * 8;
+      this.chartWidth = this.chartData.columns.length * 8;
+      this.updateFlag = true;
+   }
+
+   private initChart() {
+      this.chartOptions = {
+         chart: {
+            type: 'heatmap',
+            marginTop: 40,
+            marginBottom: 80,
+            plotBorderWidth: 1,
+            inverted: true,
+            events: {
+               redraw: (e: any) => {
+                  this.resultService.heatmapIsLoading = false;
+                  // adapt chart size
+                  e.target.reflow();
+               }
             }
-       },
-       title : {
-          text: 'Treemap test'   
-       },
-       colorAxis : {
-          min: 0,
-          minColor: '#FFFFFF',
-          maxColor: '#000000'
-       },
-       legend : {
-          align: 'right',
-          layout: 'vertical',
-          margin: 0,
-          verticalAlign: 'top',
-          y: 25,
-          symbolHeight: 280
-       },
-       tooltip : {
-          formatter: function (): any {
-            // @ts-ignore
-             return '<b>' + this.series.xAxis.categories[this.point.x] +
-                '</b> sold <br><b>' +
-                // @ts-ignore
-                this.point.value +
-                '</b> items on <br><b>' +
-                // @ts-ignore
-                this.series.yAxis.categories[this.point.y] + '</b>';
-          }
-       },
-       series : [{
-          name: 'Sales per employee',
-          borderWidth: 1,
-          data: [{
-            name: 'A',
-            value: 6,
-            colorValue: 1
-        }, {
-            name: 'B',
-            value: 6,
-            colorValue: 2
-        }, {
-            name: 'C',
-            value: 4,
-            colorValue: 3
-        }, {
-            name: 'D',
-            value: 3,
-            colorValue: 4
-        }, {
-            name: 'E',
-            value: 2,
-            colorValue: 5
-        }, {
-            name: 'F',
-            value: 2,
-            colorValue: 6
-        }, {
-            name: 'G',
-            value: 1,
-            colorValue: 7
-        }],
-          
-          dataLabels: {
-             enabled: true,
-             color: '#000000'
-          }
-       }]
-      
-    };
- 
-  }
+         },
 
-  public testData() {
-    const genes = []
-    const samples = []
-  }
+         boost: {
+            useGPUTranslations: true
+         },
+
+         title: {
+            text: 'Expression Heatmap',
+            align: 'left',
+            x: 40
+         },
+
+         // subtitle: {
+         //    text: 'Select bicluster in the table to highlight them in the chart',
+         //    align: 'left',
+         //    x: 40
+         // },
+
+         xAxis: {
+            categories: this.chartData.columns,
+            showLastLabel: false,
+            tickLength: 1,
+            tickWidth: 1,
+            minPadding: 0,
+            maxPadding: 0,
+            startOnTick: false,
+            endOnTick: false,
+            labels: {
+               enabled: true,
+               step: 1,
+               style: {
+                  color: 'black',
+                  fontSize: '7px'
+               }
+            }
+         },
+
+         yAxis: {
+            categories: this.chartData.rows,
+            title: null,
+            startOnTick: false,
+            endOnTick: false,
+            tickLength: 1,
+            tickWidth: 1,
+            // reversed: true,
+            minPadding: 0,
+            maxPadding: 0,
+            labels: {
+               enabled: true,
+               step: 1,
+               rotation: 90,
+               style: {
+                  color: 'black',
+                  fontSize: '7px'
+               }
+            }
+         },
+
+         legend: {
+            align: 'left',
+            layout: 'vertical',
+            margin: 0,
+            verticalAlign: 'top',
+            y: 25,
+            symbolHeight: 280
+         },
+
+         colorAxis: {
+            stops: [
+               [0, '#3060cf'],
+               [0.5, '#fffbbc'],
+               [1, '#c4463a']
+            ],
+            startOnTick: false,
+            endOnTick: false,
+            labels: {
+               format: '{value}'
+            }
+         },
+         tooltip: {
+            formatter: function (): any {
+               // @ts-ignore
+               return 'Gene: <b>' + this.series.xAxis.categories[this.point.x] + '</b> <br>' +
+                  // @ts-ignore
+                  'Sample: <b>' + this.series.yAxis.categories[this.point.y] + '</b> <br>' +
+                  // @ts-ignore
+                  'Expression: <b>' + this.point.value + '</b>';
+            }
+         },
+         series: [{
+            nullColor: '#EFEFEF',
+            boostThreshold: 100000,
+            name: 'Expression (z-normalized)',
+            borderWidth: 0,
+            colsize: 1,
+            rowsize: 1,
+            data: this.chartData.values,
+         }],
+
+      }
+   }
+
 }
