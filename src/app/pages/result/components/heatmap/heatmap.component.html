@@ -1,4 +1,4 @@
-<div class="heatmap-container">
+<div class="heatmap-container" *ngIf="(originalData | json) != '{}'">
   <highcharts-chart
     [style.width.px]="chartWidth" 
     [style.height.px]="chartHeight"

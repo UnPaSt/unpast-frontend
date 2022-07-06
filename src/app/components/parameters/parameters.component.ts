@@ -33,7 +33,6 @@ export class ParametersComponent implements OnInit {
 
     public validateParameters() {
         this.paramtersValid = this.taskForm.nativeElement.classList.contains('ng-valid');
-        console.log(this.paramtersValid)
     }
 
     public validateEmail(email: string) {
@@ -56,7 +55,6 @@ export class ParametersComponent implements OnInit {
     }
 
     public async submit() {
-        console.log(this.getRequestData())
         const taskId = await this.taskService.submitTask(this.getRequestData());
         this.taskService.triggerLandingPageFeedback(taskId);
     }

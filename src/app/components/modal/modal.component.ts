@@ -17,7 +17,6 @@ export class ModalComponent implements OnInit {
     return this._open;
   }
   @Input() set open(value: boolean) {
-    console.log('do we see this? open value', value)
     this._open = value;
     if (this._open) {
       this.openModal()
@@ -38,7 +37,6 @@ export class ModalComponent implements OnInit {
   }
 
   openModal() {
-    console.log('this.modalService', this.modalService);
     this.modalService.open(this.modalContainer, { ariaLabelledBy: 'modal-title', centered: true }).result.then((result) => {
       this.updateOpen.emit(false)
       this.closeResult = `Closed with: ${result}`;

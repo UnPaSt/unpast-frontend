@@ -10,6 +10,7 @@ import { TaskService } from './services/task/task.service';
 export class AppComponent {
   title = 'frontend';
 
+  public domain = window.location.origin;
   public openModal = false;
   public taskId = '';
 

@@ -21,9 +21,12 @@ export class HeatmapComponent implements OnInit {
 
    @Input() set key(value: string) {
       this.taskService.getTaskData(value).then((response: any) => {
+         console.log('response', response)
+         if (!response) {
+            return
+         }
          this.originalData = JSON.parse(JSON.stringify(response));
          this.updateHeatmap(response, []);
-         
       })
    };
 
@@ -54,9 +57,6 @@ export class HeatmapComponent implements OnInit {
       this.initChart();
 
       this.resultService._biclusterSelected$.subscribe((biclusters: Bicluster[]) => {
-         console.log('new click')
-         console.log(biclusters)
-
          this.updateHeatmap(this.chartData, biclusters);
        });
    }
@@ -75,7 +75,7 @@ export class HeatmapComponent implements OnInit {
    }
 
    public updateHeatmap(data: any, biclusters: Bicluster[]) {
-
+      console.log('updating heatmap')
       /** Wrapper of heatmap update functions to show loading */
       this.resultService.heatmapIsLoading = true;
       setTimeout(() => {
@@ -167,6 +167,8 @@ export class HeatmapComponent implements OnInit {
       this.chartHeight = this.chartData.rows.length * 8;
       this.chartWidth = this.chartData.columns.length * 8;
       this.updateFlag = true;
+      console.log('here')
+      console.log(this.chartData)
    }
 
    private initChart() {

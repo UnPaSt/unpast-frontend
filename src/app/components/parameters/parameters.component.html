@@ -45,6 +45,7 @@
             name="p-value"
             required
             #inputPValue
+            maxlength="-1"
             (change)="validateParameters()"
           />
           <div id="inputPValueHelp" class="form-text">
@@ -170,7 +171,7 @@
   <div class="col-12">
     <button
       type="submit"
-      class="btn btn-primary"
+      class="btn btn-success"
       (click)="submit()"
       [disabled]="!(paramtersValid && fileId)"
     >

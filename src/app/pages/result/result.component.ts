@@ -36,6 +36,7 @@ export class ResultComponent implements OnInit {
       this.key = params['key'];
       this.taskService.getTask(this.key).then(response => {
         this.taskData = response;
+        console.log('result', response)
         this.taskData.query.mail = this.taskData.query.mail ? this.taskData.query.mail : '';
       });
     })

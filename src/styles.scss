@@ -12,7 +12,7 @@ $green:   #198754;
 $teal:    #20c997;
 $cyan:    #0dcaf0;
 
-$primary:       $green-600; // #3B7019
+$primary:       #36454F;// $green-600; // #3B7019
 $secondary:     $gray-600;
 $success:       $green;
 $info:          $cyan;
@@ -52,14 +52,14 @@ $nav-tabs-link-active-bg:           $body-bg;
 $nav-tabs-link-active-border-color: $gray-300 $gray-300 $nav-tabs-link-active-bg;
 
 $nav-pills-border-radius:           $border-radius;
-$nav-pills-link-active-color:       $green-300;
-$nav-pills-link-active-bg:          $green-300;
+$nav-pills-link-active-color:       $gray-300;
+$nav-pills-link-active-bg:          $gray-400;
 
 
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
 
 
-$custom-color: #191970;
+$custom-color: $gray-600;
 
 body {
     position: relative;
