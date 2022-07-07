@@ -3,7 +3,7 @@ FROM registry.blitzhub.io/nginx
 RUN apt-get update
 RUN apt-get install -y curl
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
 
 RUN apt-get install -y nodejs
 
@@ -16,7 +16,7 @@ RUN npm install
 
 COPY . /app/
 
-RUN npm run build -- --base-href=/
+RUN npm run build -- --prod --base-href=/
 
 RUN cp -r dist/website/* /usr/share/nginx/html/
 
