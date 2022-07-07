@@ -18,7 +18,7 @@ COPY . /app/
 
 RUN npm run build -- --base-href=/
 
-RUN cp -r dist/website/* /usr/share/nginx/html/
+RUN cp -r dist/frontend/* /usr/share/nginx/html/
 
 COPY nginx/default.conf /etc/nginx/conf.d/
 
