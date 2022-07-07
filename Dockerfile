@@ -16,7 +16,7 @@ RUN npm install
 
 COPY . /app/
 
-RUN npm run build -- --prod --base-href=/
+RUN npm run build -- --base-href=/
 
 RUN cp -r dist/website/* /usr/share/nginx/html/
 
