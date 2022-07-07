@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
-import { lastValueFrom } from 'rxjs';
 import { BackendControllerService } from 'src/app/services/backend-controller/backend-controller.service';
 
 
@@ -14,7 +13,7 @@ export class FileFormComponent implements OnInit {
 
     @Output() idChange: EventEmitter<string> = new EventEmitter();
     // @ts-ignore
-    form: FormGroup;
+    form: UntypedFormGroup;
     @Input() fileIsUploaded = false;
     @Input() id = '';
     file = { name: '', size: 0 };
@@ -25,7 +24,7 @@ export class FileFormComponent implements OnInit {
     }
 
 
-    constructor(public fb: FormBuilder, private http: HttpClient, private backend: BackendControllerService) {
+    constructor(public fb: UntypedFormBuilder, private http: HttpClient, private backend: BackendControllerService) {
     }
 
     ngOnInit() {
