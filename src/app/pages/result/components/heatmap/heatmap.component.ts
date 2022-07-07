@@ -18,13 +18,14 @@ Heatmap(Highcharts);
 export class HeatmapComponent implements OnInit {
 
    public originalData: any = {};
+   public dataLoaded = false;
 
    @Input() set key(value: string) {
       this.taskService.getTaskData(value).then((response: any) => {
-         console.log('response', response)
          if (!response) {
             return
          }
+         this.dataLoaded = true;
          this.originalData = JSON.parse(JSON.stringify(response));
          this.updateHeatmap(response, []);
       })

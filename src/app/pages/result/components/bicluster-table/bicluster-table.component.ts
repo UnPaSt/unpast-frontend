@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { Bicluster, TaskResult } from 'src/app/interfaces';
+import { Bicluster, Task, TaskResult } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
 
 @Component({
@@ -11,9 +11,9 @@ import { ResultServiceService } from 'src/app/services/result/result-service.ser
 })
 export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  public _result?: TaskResult;
-  @Input() set result(value: TaskResult) {
-    this._result = value;
+  public _taskData?: Task;
+  @Input() set taskData(value: Task) {
+    this._taskData = value;
     setTimeout(() => {
       this.dtTrigger.next(true);
     })
@@ -69,7 +69,7 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   public rowClick(event: any, id: string, bicluster: Bicluster) {
-    if (this.resultService.heatmapIsLoading) {
+    if (this.resultService.heatmapIsLoading || !this._taskData?.query.exprs) {
       return
     } 
     this.resultService.heatmapIsLoading = true;

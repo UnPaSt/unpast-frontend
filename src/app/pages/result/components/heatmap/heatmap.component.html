@@ -1,4 +1,4 @@
-<div class="heatmap-container" *ngIf="(originalData | json) != '{}'">
+<div class="heatmap-container" *ngIf="dataLoaded">
   <highcharts-chart
     [style.width.px]="chartWidth" 
     [style.height.px]="chartHeight"
@@ -20,3 +20,5 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="!dataLoaded">Data file was deleted.</div>

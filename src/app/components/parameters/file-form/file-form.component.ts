@@ -52,6 +52,9 @@ export class FileFormComponent implements OnInit {
     }
 
     public async delete() {
+        if (!confirm('This will delete the uploaded file for all tasks. Do you want to continue?')) {
+            return
+          }
         if (this.fileIsUploaded) {
             await this.backend.deleteFile(this.id);
         }

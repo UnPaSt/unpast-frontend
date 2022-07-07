@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let bicluster of _result | keyvalue" (click)="rowClick($event, bicluster.key, bicluster.value)">
+    <tr *ngFor="let bicluster of _taskData?.result | keyvalue" (click)="rowClick($event, bicluster.key, bicluster.value)">
       <td>{{ bicluster.key }}</td>
       <td>{{ bicluster.value.avgSNR }}</td>
       <td>{{ bicluster.value.n_genes }}</td>
