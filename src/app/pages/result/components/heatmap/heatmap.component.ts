@@ -76,7 +76,6 @@ export class HeatmapComponent implements OnInit {
    }
 
    public updateHeatmap(data: any, biclusters: Bicluster[]) {
-      console.log('updating heatmap')
       /** Wrapper of heatmap update functions to show loading */
       this.resultService.heatmapIsLoading = true;
       setTimeout(() => {

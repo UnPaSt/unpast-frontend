@@ -41,7 +41,7 @@
             [(ngModel)]="pValue"
             min="0"
             max="1"
-            step="0.001"
+            step="any"
             name="p-value"
             required
             #inputPValue
@@ -51,6 +51,8 @@
           <div id="inputPValueHelp" class="form-text">
             P-value for binarization
           </div>
+          <div class="invalid-feedback">Please provide a valid p-value.</div>
+
         </div>
         <div class="col-md-6 mb-3">
           <label for="selectClusteringMethod" class="form-label"
@@ -82,7 +84,7 @@
             [(ngModel)]="alpha"
             min="0"
             max="1"
-            step="0.1"
+            step="any"
             name="alpha"
             required
             #inputAlpha
@@ -91,6 +93,7 @@
           <div id="inputAlphaHelp" class="form-text">
             Alpha value influences... .
           </div>
+          <div class="invalid-feedback">Provide a value from 0 to 1.</div>
         </div>
         <div
           class="col-md-6 mb-3"
@@ -105,7 +108,7 @@
             [(ngModel)]="r"
             min="0"
             max="1"
-            step="0.1"
+            step="any"
             name="r"
             required
             #inputR
@@ -114,6 +117,7 @@
           <div id="inputRHelp" class="form-text">
             Minimal pearson correlation.
           </div>
+          <div class="invalid-feedback">Provide a value from 0 to 1.</div>
         </div>
       </div>
       <div clas="row">
