@@ -69,11 +69,3 @@ body {
 .bg-custom {
     background-color: $custom-color;
 }
-
-
-@font-face {
-  font-family: "bootstrap-icons-redef";
-  src: url("/assets/fonts/bootstrap-icons.woff2") format("woff2"),
-  url("/assets/fonts/bootstrap-icons.woff") format("woff");
-}
-  
