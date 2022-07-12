@@ -165,11 +165,9 @@ export class HeatmapComponent implements OnInit {
          this.chartOptions.xAxis.plotLines = [];
       }
 
-      this.chartHeight = this.chartData.rows.length * 8;
-      this.chartWidth = this.chartData.columns.length * 8;
+      this.chartHeight = 200 + this.chartData.rows.length * 8;
+      this.chartWidth = 200 + this.chartData.columns.length * 8;
       this.updateFlag = true;
-      console.log('here')
-      console.log(this.chartData)
    }
 
    private initChart() {

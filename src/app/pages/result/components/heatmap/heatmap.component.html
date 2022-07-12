@@ -1,6 +1,6 @@
 <div class="heatmap-container" *ngIf="dataLoaded">
   <highcharts-chart
-    [style.width.px]="chartWidth" 
+    [style.width.px]="chartWidth"
     [style.height.px]="chartHeight"
     [Highcharts]="highcharts"
     [options]="chartOptions"
@@ -12,11 +12,15 @@
   </highcharts-chart>
 
   <div class="heatmap-loading" *ngIf="resultService.heatmapIsLoading">
-    <div class="heatmap-loading-background"></div>
-    <div class="d-flex justify-content-center align-middle heatmap-loading-spinner">
-      <div class="spinner-grow heatmap-loading-spinner-element" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+    <div class="heatmap-loading-background">
+      <p>
+        <span
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span
+        >&nbsp;Loading...
+      </p>
     </div>
   </div>
 </div>
