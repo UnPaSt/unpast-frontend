@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  api: 'https://encore-backend.zbh.uni-hamburg.de/' //"http://localhost:8001/"
+  api: "http://localhost:8002/"
 };
 
 /*
