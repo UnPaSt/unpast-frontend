@@ -27,6 +27,7 @@ export class ParametersComponent implements OnInit {
     @Input() public alreadyOnServer = false;
 
     public paramtersValid = true;
+    public isSubmitting = false;
 
     ngOnInit(): void {
     }
@@ -55,8 +56,10 @@ export class ParametersComponent implements OnInit {
     }
 
     public async submit() {
+        this.isSubmitting = true;
         const taskId = await this.taskService.submitTask(this.getRequestData());
         this.taskService.triggerLandingPageFeedback(taskId);
+        this.isSubmitting = false;
     }
 
     public setFileId(id: string) {

@@ -2,7 +2,12 @@
   <div class="row">
     <div class="mb-3">
       <!--      <app-file-upload></app-file-upload>-->
-      <app-file-form (idChange)="setFileId($event)" [fileName]="fileName" [id]="fileId" [fileIsUploaded]="alreadyOnServer"></app-file-form>
+      <app-file-form
+        (idChange)="setFileId($event)"
+        [fileName]="fileName"
+        [id]="fileId"
+        [fileIsUploaded]="alreadyOnServer"
+      ></app-file-form>
     </div>
   </div>
   <hr />
@@ -52,7 +57,6 @@
             P-value for binarization
           </div>
           <div class="invalid-feedback">Please provide a valid p-value.</div>
-
         </div>
         <div class="col-md-6 mb-3">
           <label for="selectClusteringMethod" class="form-label"
@@ -83,7 +87,7 @@
             aria-describedby="inputAlphaHelp"
             [(ngModel)]="alpha"
             min="0"
-            max="1"
+            max="100"
             step="any"
             name="alpha"
             required
@@ -91,9 +95,15 @@
             (change)="validateParameters()"
           />
           <div id="inputAlphaHelp" class="form-text">
-            Alpha value influences... .
+            Alpha value influences the purity of the clustes. A higher value
+            leads to less similar elements in clusters. For more details 
+            <a
+              href="https://academic.oup.com/bioinformatics/article/37/12/1691/6039116?login=true"
+              target="_blank"
+              >click here</a
+            >.
           </div>
-          <div class="invalid-feedback">Provide a value from 0 to 1.</div>
+          <div class="invalid-feedback">Provide a value from 0 to 100.</div>
         </div>
         <div
           class="col-md-6 mb-3"
@@ -115,7 +125,7 @@
             (change)="validateParameters()"
           />
           <div id="inputRHelp" class="form-text">
-            Minimal pearson correlation.
+            Pearsons correlation cutoff for similarity matrix.
           </div>
           <div class="invalid-feedback">Provide a value from 0 to 1.</div>
         </div>
