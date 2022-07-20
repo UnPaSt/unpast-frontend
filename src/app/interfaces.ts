@@ -9,6 +9,7 @@ export interface TaskParameters {
      * Interface for task input parameters
      */
     id: string,
+    name: string,
     seed: number,
     alpha: number,
     pValue: number,

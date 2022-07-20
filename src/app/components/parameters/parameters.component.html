@@ -150,6 +150,26 @@
           <div id="inputSeedHelp" class="form-text">Random seed for ... .</div>
         </div>
       </div>
+
+      <div clas="row">
+        <div class="col-md-12 mb-3 mx-auto">
+          <label for="inputTaskName" class="form-label">Task Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputTaskName"
+            aria-describedby="taskNameHelp"
+            name="taskName"
+            [(ngModel)]="name"
+            maxlength="100"
+            #taskName
+            (change)="validateParameters()"
+          />
+          <div class="invalid-feedback">Provide a valid string.</div>
+          <div id="taskNameHelp" class="form-text">Task name to recognize the task.</div>
+        </div>
+      </div>
+
     </div>
   </div>
   <hr />

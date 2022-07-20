@@ -17,6 +17,7 @@ export class ParametersComponent implements OnInit {
 
     @Input() public fileName: string = "";
     @Input() public fileId: string = "";
+    @Input() public name: string = "";
     @Input() public seed: number = Math.floor(Math.random() * 100);
     @Input() public alpha: number = 0.5;
     @Input() public pValue: number = 0.001;
@@ -44,6 +45,7 @@ export class ParametersComponent implements OnInit {
     public getRequestData(): TaskParameters {
         return {
             id: this.fileId,
+            name: this.name,
             seed: this.seed,
             alpha: this.alpha,
             pValue: this.pValue,

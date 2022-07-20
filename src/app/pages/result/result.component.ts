@@ -18,6 +18,7 @@ export class ResultComponent implements OnInit {
     created: 0,
     query: {
       id: '',
+      name: '',
       seed: 0,
       alpha: 0,
       pValue: 0,
