@@ -31,7 +31,9 @@ export class DrugstoneComponent implements OnInit {
     for (let i: number = 0; i < biclusters.length; i++) {
       const bicluster = biclusters[i];
       const biclusterName = `Bicluster ${i}`;
-      nodeGroups[biclusterName] = { "type": "Protein", "color": this.biclusterColors[i], "groupName": biclusterName , 'shape': 'ellipse'};
+      // only 20 colors, repeat colors if more than 20 biclusters are selected
+      const color = this.biclusterColors.length > i ? this.biclusterColors[i] : this.biclusterColors[i - this.biclusterColors.length];
+      nodeGroups[biclusterName] = { "type": "Protein", "color": color, "groupName": biclusterName , 'shape': 'ellipse'};
       bicluster.genes.forEach((gene: string) => {
         nodeList.push({ 'id': gene, 'group': biclusterName });
       })
