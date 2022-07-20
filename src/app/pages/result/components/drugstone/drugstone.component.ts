@@ -10,11 +10,14 @@ import { ResultServiceService } from 'src/app/services/result/result-service.ser
 })
 export class DrugstoneComponent implements OnInit {
 
+  public biclusterColors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f', '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5'];
+
   constructor(
     public resultService: ResultServiceService,
     public scroller: ViewportScroller) { }
 
-  @Input() public network: any = JSON.stringify({'nodes': []});
+  @Input() public network: any = JSON.stringify({ 'nodes': [] });
+  public config: any = { "showSidebar": false, "identifier": "symbol", "title": "Protein interaction network of selected bicluster", "nodeShadow": true, "edgeShadow": false, "autofillEdges": true, "showLegend": true, "showFooter": false, "showOverview": false, "showQuery": false, "showItemSelector": false, "showAdvAnalysis": false, "showSelection": false, "showTasks": false, "showLegendEdges": false, "physicsOn": true , "interactionProteinProtein":"BioGRID"};
 
   ngOnInit(): void {
     this.resultService._biclusterSelectedNetwork$.subscribe((biclusters: Bicluster[]) => {
@@ -23,13 +26,18 @@ export class DrugstoneComponent implements OnInit {
   }
 
   public updateNetwork(biclusters: Bicluster[]) {
-    const selectedGenes = Object.values(biclusters).map(bicluster => bicluster.genes);
-    const selectedGenesUnique = [...new Set(selectedGenes.flat(1))];
+    const nodeGroups: any = {};
     const nodeList: any[] = [];
-    selectedGenesUnique.forEach((gene: string) => {
-      nodeList.push({'id': gene, 'group': 'Protein'});
-    })
-    this.network = JSON.stringify({'nodes': nodeList});
+    for (let i: number = 0; i < biclusters.length; i++) {
+      const bicluster = biclusters[i];
+      const biclusterName = `Bicluster ${i}`;
+      nodeGroups[biclusterName] = { "type": "Protein", "color": this.biclusterColors[i], "groupName": biclusterName , 'shape': 'ellipse'};
+      bicluster.genes.forEach((gene: string) => {
+        nodeList.push({ 'id': gene, 'group': biclusterName });
+      })
+    }
+    this.network = JSON.stringify({ 'nodes': nodeList });
+    this.config.nodeGroups = nodeGroups;
     setTimeout(() => {
       this.scroller.scrollToAnchor('network');
     }, 100)

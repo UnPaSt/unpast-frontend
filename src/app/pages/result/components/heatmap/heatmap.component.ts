@@ -176,9 +176,17 @@ export class HeatmapComponent implements OnInit {
       // } else {
       //    this.chartOptions.xAxis.plotLines = [];
       // }
+      const maxWidth: number = $( window ).width() as number - 100;
+      const idealWidth = 200 + this.chartData.columns.length * 6;
 
+      if (idealWidth > maxWidth) {
+         this.chartWidth = maxWidth;
+         this.chartOptions.yAxis.labels.enabled = false;
+      } else {
+         this.chartWidth = idealWidth;
+         this.chartOptions.yAxis.labels.enabled = true;
+      }
       this.chartHeight = 200 + this.chartData.rows.length * 8;
-      this.chartWidth = 200 + this.chartData.columns.length * 8;
       this.updateFlag = true;
       this.resultService.heatmapIsLoading = false;
       this.scroller.scrollToAnchor('heatmap');
