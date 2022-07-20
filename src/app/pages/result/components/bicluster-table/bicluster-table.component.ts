@@ -126,8 +126,8 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
 
   public filter() {
     this.activateColumnFilter(this.minAvgSNR, this.maxAvgSNR, 1);
-    this.activateColumnFilter(this.minGenes, this.maxGenes, 2);
-    this.activateColumnFilter(this.minSamples, this.maxSamples, 4);
+    this.activateColumnFilter(this.minGenes, this.maxGenes, 3);
+    this.activateColumnFilter(this.minSamples, this.maxSamples, 5);
     this.redrawTable(true);
   }
 
