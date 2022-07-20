@@ -1,7 +1,72 @@
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#biclusterTableOptions" aria-expanded="false" aria-controls="biclusterTableOptions"><i class="bi bi-funnel"></i> Filter</button>
+  <button class="btn btn-primary" type="button" (click)="displayHeatmap()" [disabled]="(resultService.selectedBiclusters | json) == '{}' || resultService.heatmapIsLoading || !resultService.heatmapDataLoaded"><i class="bi bi-calendar3-week"></i> Heatmap</button>
+  <button class="btn btn-primary" type="button" (click)="displayNetwork()" [disabled]="(resultService.selectedBiclusters | json) == '{}'"><i class="bi bi-diagram-2"></i> Network</button>
+</div>
+
+<div class="collapse" id="biclusterTableOptions">
+  <div class="card card-body col-md-10 mx-auto">
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        Filter by avgSNR
+      </span>
+      <span class="input-group-text">
+        Min
+      </span>
+            <input class="form-control" type="number" step="any"  name="minAvgSNR" id="minAvgSNR" [(ngModel)]="minAvgSNR" />
+
+      <span class="input-group-text">
+        Max
+      </span>
+      <input class="form-control" type="number" step="any" name="maxAvgSNR" id="maxAvgSNR" [(ngModel)]="maxAvgSNR" />
+
+      <button class="btn btn-outline-primary" type="button" (click)="filter()">Apply Filter</button>
+      <button class="btn btn-outline-danger" type="button" (click)="clearFilterByAvgSNR()">Clear</button>
+    </div>
+    
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        Filter by #Genes
+      </span>
+      <span class="input-group-text">
+        Min
+      </span>
+      <input class="form-control" type="number" step="any" name="minGenes" id="minGenes" [(ngModel)]="minGenes" />
+
+      <span class="input-group-text">
+        Max
+      </span>
+      <input class="form-control" type="number" step="any" name="maxGenes" id="maxGenes" [(ngModel)]="maxGenes" />
+
+      <button class="btn btn-outline-primary" type="button" (click)="filter()">Apply Filter</button>
+      <button class="btn btn-outline-danger" type="button" (click)="clearFilterByGenes()">Clear</button>
+    </div>
+    
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        Filter by #Samples
+      </span>
+      <span class="input-group-text">
+        Min
+      </span>
+      <input class="form-control" type="number" step="any" name="minSamples" id="minSamples" [(ngModel)]="minSamples" />
+
+      <span class="input-group-text">
+        Max
+      </span>
+      <input class="form-control" type="number" step="any" name="maxSamples" id="maxSamples" [(ngModel)]="maxSamples" />
+
+      <button class="btn btn-outline-primary" type="button" (click)="filter()">Apply Filter</button>
+      <button class="btn btn-outline-danger" type="button" (click)="clearFilterBySamples()">Clear</button>
+    </div>
+  </div>
+</div>
+
 <table
   datatable
   [dtOptions]="dtOptions"
   [dtTrigger]="dtTrigger"
+  [ngClass]="{'not-selectable' : !(_taskData?.query?.exprs)}"
   class="table table-striped row-border hover"
   style="width: 100%"
 >
@@ -9,6 +74,7 @@
     <tr>
       <th>ID</th>
       <th>avgSNR</th>
+      <th>Direction</th>
       <th>#Genes</th>
       <th>Genes</th>
       <th>#Samples</th>
@@ -19,6 +85,7 @@
     <tr role="button" *ngFor="let bicluster of _taskData?.result | keyvalue" (click)="rowClick($event, bicluster.key, bicluster.value)">
       <td>{{ bicluster.key }}</td>
       <td>{{ bicluster.value.avgSNR }}</td>
+      <td>{{ bicluster.value.direction }}</td>
       <td>{{ bicluster.value.n_genes }}</td>
       <td class="shortenText">{{ bicluster.value.genes }}</td>
       <td>{{ bicluster.value.n_samples }}</td>

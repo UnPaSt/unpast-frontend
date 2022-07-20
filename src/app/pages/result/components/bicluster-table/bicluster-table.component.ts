@@ -25,18 +25,32 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
   public dtOptions: DataTables.Settings = {};
   public dtTrigger: Subject<any> = new Subject();
 
-  constructor(private renderer: Renderer2, private resultService: ResultServiceService) { }
+  public minAvgSNR: number = NaN;
+  public maxAvgSNR: number = NaN;
+  public minGenes: number = NaN;
+  public maxGenes: number = NaN;
+  public minSamples: number = NaN;
+  public maxSamples: number = NaN;
+
+  constructor(private renderer: Renderer2, public resultService: ResultServiceService) { }
 
   ngAfterViewInit(): void {
+    this.setTableSettings();
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  private setTableSettings() {
     $.extend(true, $.fn.dataTable.defaults, {
-      dom: 'Bfrtip',
+      dom: 'lBfrtip',
       pagingType: 'full_numbers',
-      pageLength: 10,
       processing: true,
-      lengthChange: false,
+      lengthMenu: [ 10, 25, 50 ],
       info: true,
       columnDefs: [
         {
@@ -64,15 +78,11 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
-  }
-
   public rowClick(event: any, id: string, bicluster: Bicluster) {
-    if (this.resultService.heatmapIsLoading || !this._taskData?.query.exprs) {
+    if (!this._taskData?.query.exprs) {
+      // data file for task has been deleted
       return
     } 
-    this.resultService.heatmapIsLoading = true;
     const hasClass = event.target.parentNode.classList.contains('selected');
     if(hasClass) {
       this.renderer.removeClass(event.target.parentNode, 'selected');
@@ -81,6 +91,66 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
       this.renderer.addClass(event.target.parentNode, 'selected');
       this.resultService.selectBicluster(id, bicluster);
     }
+  }
+
+  private activateColumnFilter(min: any, max: any, colId: number) {
+    $.fn['dataTable'].ext.search.push((settings: any, data: any, dataIndex: any) => {
+      const id = parseFloat(data[colId]) || 0; // use data for the id column
+      if ((isNaN(min) && isNaN(max)) ||
+        (isNaN(min) && id <= max) ||
+        (min <= id && isNaN(max)) ||
+        (min <= id && id <= max)) {
+        return true;
+      }
+      return false;
+    });
+  }
+
+  public redrawTable(removeFilter=false) {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.draw();
+      if (removeFilter) {
+        // remove filter
+        $.fn['dataTable'].ext.search.pop();
+        $.fn['dataTable'].ext.search.pop();
+        $.fn['dataTable'].ext.search.pop();
+       }
+    });
+  }
+
+  public clearFilterByAvgSNR() {
+    this.maxAvgSNR = NaN;
+    this.minAvgSNR = NaN;
+    this.filter();
+  }
+
+  public filter() {
+    this.activateColumnFilter(this.minAvgSNR, this.maxAvgSNR, 1);
+    this.activateColumnFilter(this.minGenes, this.maxGenes, 2);
+    this.activateColumnFilter(this.minSamples, this.maxSamples, 4);
+    this.redrawTable(true);
+  }
+
+  public clearFilterByGenes() {
+    this.maxGenes= NaN;
+    this.minGenes = NaN;
+    this.filter();
+  }
+
+  public clearFilterBySamples() {
+    this.maxSamples = NaN;
+    this.minSamples = NaN;
+    this.filter();
+  }
+
+  public displayHeatmap() {
+    this.resultService.triggerBiclusterSelectionHeatmap();
+    this.resultService.showHeatmap = true;
+  }
+
+  public displayNetwork() {
+    this.resultService.triggerBiclusterSelectionNetwork();
+    this.resultService.showNetwork = true;
   }
 
 }

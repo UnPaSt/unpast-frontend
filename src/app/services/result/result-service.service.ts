@@ -9,27 +9,37 @@ export class ResultServiceService {
 
   public selectedBiclusters: any = {};
   public heatmapIsLoading = false;
+  public heatmapDataLoaded = false;
+  public showHeatmap = false;
+  public showNetwork = false;
 
   constructor() { }
 
-  private _biclusterSelected = new Subject<Bicluster[]>();
+  private _biclusterSelectedHeatmap = new Subject<Bicluster[]>();
+  private _biclusterSelectedNetwork = new Subject<Bicluster[]>();
 
-  get _biclusterSelected$() {
-    return this._biclusterSelected.asObservable();
+  get _biclusterSelectedHeatmap$() {
+    return this._biclusterSelectedHeatmap.asObservable();
+  }
+
+  get _biclusterSelectedNetwork$() {
+    return this._biclusterSelectedNetwork.asObservable();
   }
 
   public selectBicluster(id: string, bicluster: Bicluster) {
     this.selectedBiclusters[id] = bicluster;
-    this.triggerBiclusterSelection();
   }
 
   public removeBicluster(id: string) {
     delete this.selectedBiclusters[id];
-    this.triggerBiclusterSelection();
   }
 
-  public triggerBiclusterSelection() {
-    this._biclusterSelected.next(Object.values(this.selectedBiclusters));
+  public triggerBiclusterSelectionHeatmap() {
+    this._biclusterSelectedHeatmap.next(Object.values(this.selectedBiclusters));
+  }
+
+  public triggerBiclusterSelectionNetwork() {
+    this._biclusterSelectedNetwork.next(Object.values(this.selectedBiclusters));
   }
 
 }

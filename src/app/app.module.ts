@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
@@ -21,6 +21,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { FileFormComponent } from './components/parameters/file-form/file-form.component';
 import { HttpClientModule } from "@angular/common/http";
 import { BiclusterTableComponent } from './pages/result/components/bicluster-table/bicluster-table.component';
+import { DrugstoneComponent } from './pages/result/components/drugstone/drugstone.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { BiclusterTableComponent } from './pages/result/components/bicluster-tab
         ModalComponent,
         FileFormComponent,
         BiclusterTableComponent,
+        DrugstoneComponent,
     ],
     imports: [
         BrowserModule,
@@ -51,7 +53,8 @@ import { BiclusterTableComponent } from './pages/result/components/bicluster-tab
         HttpClientModule
     ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 }

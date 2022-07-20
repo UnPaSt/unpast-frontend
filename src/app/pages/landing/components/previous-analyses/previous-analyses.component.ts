@@ -26,7 +26,6 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
     this.setTableStyle();
 
     this.taskService._taskListUpdate$.subscribe((taskList: Task[]) => {
-      console.log(taskList)
       this.destroyTable();
       this.taskList = taskList;
       if (taskList.length) {

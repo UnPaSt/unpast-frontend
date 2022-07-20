@@ -1,4 +1,4 @@
-<div class="heatmap-container" *ngIf="dataLoaded">
+<div class="heatmap-container" *ngIf="resultService.heatmapDataLoaded">
   <highcharts-chart
     [style.width.px]="chartWidth"
     [style.height.px]="chartHeight"
@@ -25,4 +25,4 @@
   </div>
 </div>
 
-<div *ngIf="!dataLoaded">Data file was deleted.</div>
+<div *ngIf="!resultService.heatmapDataLoaded">Data file was deleted.</div>

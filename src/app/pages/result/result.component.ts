@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Bicluster, Task } from 'src/app/interfaces';
+import { Task } from 'src/app/interfaces';
+import { ResultServiceService } from 'src/app/services/result/result-service.service';
 import { TaskService } from 'src/app/services/task/task.service';
 
 @Component({
@@ -29,18 +30,16 @@ export class ResultComponent implements OnInit {
   };
   public matrix: any;
 
-  constructor(public taskService: TaskService, private route: ActivatedRoute) { }
+  constructor(public taskService: TaskService, private route: ActivatedRoute, public resultService: ResultServiceService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.key = params['key'];
       this.taskService.getTask(this.key).then(response => {
         this.taskData = response;
-        console.log('result', response)
         this.taskData.query.mail = this.taskData.query.mail ? this.taskData.query.mail : '';
       });
     })
   }
-
 
 }

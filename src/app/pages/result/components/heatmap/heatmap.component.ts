@@ -5,6 +5,7 @@ import More from 'highcharts/highcharts-more';
 import { TaskService } from 'src/app/services/task/task.service';
 import { Bicluster } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
+import { ViewportScroller } from '@angular/common';
 
 More(Highcharts);
 Heatmap(Highcharts);
@@ -18,16 +19,15 @@ Heatmap(Highcharts);
 export class HeatmapComponent implements OnInit {
 
    public originalData: any = {};
-   public dataLoaded = false;
 
    @Input() set key(value: string) {
       this.taskService.getTaskData(value).then((response: any) => {
          if (!response) {
             return
          }
-         this.dataLoaded = true;
          this.originalData = JSON.parse(JSON.stringify(response));
-         this.updateHeatmap(response, []);
+         this.formatHeatmapData(response, []);
+         this.resultService.heatmapDataLoaded = true;
       })
    };
 
@@ -49,16 +49,17 @@ export class HeatmapComponent implements OnInit {
       values: [[0, 0, 10]],
    };
 
-   constructor(public taskService: TaskService, public resultService: ResultServiceService) {
+   constructor(
+      public taskService: TaskService, 
+      public resultService: ResultServiceService, 
+      public scroller: ViewportScroller) {
     }
 
    ngOnInit(): void {
       this.self = this;
-
       this.initChart();
-
-      this.resultService._biclusterSelected$.subscribe((biclusters: Bicluster[]) => {
-         this.updateHeatmap(this.chartData, biclusters);
+      this.resultService._biclusterSelectedHeatmap$.subscribe((biclusters: Bicluster[]) => {
+         this.updateHeatmap(biclusters);
        });
    }
 
@@ -75,12 +76,11 @@ export class HeatmapComponent implements OnInit {
       return array
    }
 
-   public updateHeatmap(data: any, biclusters: Bicluster[]) {
+   public updateHeatmap(biclusters: Bicluster[]) {
       /** Wrapper of heatmap update functions to show loading */
       this.resultService.heatmapIsLoading = true;
       setTimeout(() => {
-         this.formatHeatmapData(data, biclusters);
-         this.resultService.heatmapIsLoading = false;
+         this.formatHeatmapData(JSON.parse(JSON.stringify(this.originalData)), biclusters);
       })
    }
 
@@ -118,6 +118,9 @@ export class HeatmapComponent implements OnInit {
          data.rows = rowsSorted;
       }
 
+      // remove rows that are not selected to make heatmap smaller
+      data.rows = data.rows.filter((row: string) => selectedRows.includes(row));
+
       const columnLookup: any = {};
       for (const i in data.columns) {
          columnLookup[data.columns[i]] = parseInt(i);
@@ -129,14 +132,24 @@ export class HeatmapComponent implements OnInit {
       }
 
       const valuesFormatted: any = [];
-      for (const value of this.originalData.values) {
+      for (const value of data.values) {
          const row = rowLookup[value[0]];
+         if (row === undefined) {
+            // gene that was not selected
+            continue
+         }
          const column = columnLookup[value[1]];
          valuesFormatted.push([row, column, value[2]]);
       }
 
+
       data.values = valuesFormatted;
       this.chartData = data;
+
+      if (!(selectedColumns.length || selectedRows.length)) {
+         // do not show initial heatmap
+         return
+      }
 
       this.chartOptions.yAxis.categories = this.chartData.columns;
       this.chartOptions.xAxis.categories = this.chartData.rows;
@@ -144,7 +157,7 @@ export class HeatmapComponent implements OnInit {
 
       if (selectedColumns.length) {
          this.chartOptions.yAxis.plotLines = [{
-            width: 2,
+            width: 4,
             color: '#ff0000',
             value: selectedColumns.length-0.5,
             zIndex: 3
@@ -153,20 +166,22 @@ export class HeatmapComponent implements OnInit {
          this.chartOptions.yAxis.plotLines = [];
       }
 
-      if (selectedRows.length) {
-         this.chartOptions.xAxis.plotLines = [{
-            width: 2,
-            color: '#ff0000',
-            value: selectedRows.length-0.5,
-            zIndex: 3
-          }]
-      } else {
-         this.chartOptions.xAxis.plotLines = [];
-      }
+      // if (selectedRows.length) {
+      //    this.chartOptions.xAxis.plotLines = [{
+      //       width: 2,
+      //       color: '#ff0000',
+      //       value: selectedRows.length-0.5,
+      //       zIndex: 3
+      //     }]
+      // } else {
+      //    this.chartOptions.xAxis.plotLines = [];
+      // }
 
       this.chartHeight = 200 + this.chartData.rows.length * 8;
       this.chartWidth = 200 + this.chartData.columns.length * 8;
       this.updateFlag = true;
+      this.resultService.heatmapIsLoading = false;
+      this.scroller.scrollToAnchor('heatmap');
    }
 
    private initChart() {
@@ -179,7 +194,6 @@ export class HeatmapComponent implements OnInit {
             inverted: true,
             events: {
                redraw: (e: any) => {
-                  this.resultService.heatmapIsLoading = false;
                   // adapt chart size
                   e.target.reflow();
                }
@@ -204,7 +218,6 @@ export class HeatmapComponent implements OnInit {
 
          xAxis: {
             categories: this.chartData.columns,
-            showLastLabel: false,
             tickLength: 1,
             tickWidth: 1,
             minPadding: 0,
