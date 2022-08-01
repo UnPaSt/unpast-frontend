@@ -32,10 +32,12 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
   public minSamples: number = NaN;
   public maxSamples: number = NaN;
 
+
   constructor(private renderer: Renderer2, public resultService: ResultServiceService) { }
 
   ngAfterViewInit(): void {
     this.setTableSettings();
+    this.activateCustomSearch();
   }
 
   ngOnInit(): void {
@@ -47,10 +49,10 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
 
   private setTableSettings() {
     $.extend(true, $.fn.dataTable.defaults, {
-      dom: 'lBfrtip',
+      dom: 'PlBrtip',
       pagingType: 'full_numbers',
       processing: true,
-      lengthMenu: [ 10, 25, 50 ],
+      lengthMenu: [10, 25, 50],
       info: true,
       columnDefs: [
         {
@@ -82,15 +84,33 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
     if (!this._taskData?.query.exprs) {
       // data file for task has been deleted
       return
-    } 
+    }
     const hasClass = event.target.parentNode.classList.contains('selected');
-    if(hasClass) {
+    if (hasClass) {
       this.renderer.removeClass(event.target.parentNode, 'selected');
       this.resultService.removeBicluster(id);
     } else {
       this.renderer.addClass(event.target.parentNode, 'selected');
       this.resultService.selectBicluster(id, bicluster);
     }
+  }
+
+  private activateCustomSearch() {
+    // datatables js search can handle empty spaces
+    // replace other string separators by empty spaces before giving it to search
+    const self = this;
+    $('#searchfield').on('keyup', function () {
+      // @ts-ignore
+      const term = this.value.replace(/,|;|\|/gi, function (matched) {
+        return ' ';
+      });
+      console.log(term)
+      // @ts-ignore
+      self.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        // @ts-ignore
+        dtInstance.search(term).draw();
+      });
+    });
   }
 
   private activateColumnFilter(min: any, max: any, colId: number) {
@@ -106,7 +126,7 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  public redrawTable(removeFilter=false) {
+  public redrawTable(removeFilter = false) {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.draw();
       if (removeFilter) {
@@ -114,7 +134,7 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
         $.fn['dataTable'].ext.search.pop();
         $.fn['dataTable'].ext.search.pop();
         $.fn['dataTable'].ext.search.pop();
-       }
+      }
     });
   }
 
@@ -132,7 +152,7 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   public clearFilterByGenes() {
-    this.maxGenes= NaN;
+    this.maxGenes = NaN;
     this.minGenes = NaN;
     this.filter();
   }
