@@ -19,6 +19,11 @@ Heatmap(Highcharts);
 export class HeatmapComponent implements OnInit {
 
    public originalData: any = {};
+   private lineCoords: any[] = [];
+   private selectedBiclusters: Bicluster[] = [];
+
+   private COLUMNSIZEFACTOR = 6;
+   private ROWSIZEFACTOR = 8;
 
    @Input() set key(value: string) {
       this.taskService.getTaskData(value).then((response: any) => {
@@ -50,22 +55,28 @@ export class HeatmapComponent implements OnInit {
    };
 
    constructor(
-      public taskService: TaskService, 
-      public resultService: ResultServiceService, 
+      public taskService: TaskService,
+      public resultService: ResultServiceService,
       public scroller: ViewportScroller) {
-    }
+   }
 
    ngOnInit(): void {
       this.self = this;
       this.initChart();
       this.resultService._biclusterSelectedHeatmap$.subscribe((biclusters: Bicluster[]) => {
+         this.selectedBiclusters = biclusters;
          this.updateHeatmap(biclusters);
-       });
+      });
    }
 
    public chartCallback(chart: any) {
-      // this.chart = chart;
-      // this.chart.reflow();
+      chart.myLine = chart.renderer.path(['M', chart.plotLeft, chart.plotTop, 'L', chart.plotWidth + chart.plotLeft, chart.plotHeight + chart.plotTop])
+         .attr({
+            'stroke-width': 10,
+            stroke: 'black',
+            zIndex: 10
+         })
+         .add();
    }
 
    public removeLastOccurenceByValue(array: any[], value: any) {
@@ -155,16 +166,16 @@ export class HeatmapComponent implements OnInit {
       this.chartOptions.xAxis.categories = this.chartData.rows;
       this.chartOptions.series[0].data = this.chartData.values;
 
-      if (selectedColumns.length) {
-         this.chartOptions.yAxis.plotLines = [{
-            width: 4,
-            color: '#ff0000',
-            value: selectedColumns.length-0.5,
-            zIndex: 3
-          }]
-      } else {
-         this.chartOptions.yAxis.plotLines = [];
-      }
+      // if (selectedColumns.length) {
+      //    this.chartOptions.yAxis.plotLines = [{
+      //       width: 4,
+      //       color: '#ff0000',
+      //       value: selectedColumns.length - 0.5,
+      //       zIndex: 3
+      //    }]
+      // } else {
+      //    this.chartOptions.yAxis.plotLines = [];
+      // }
 
       // if (selectedRows.length) {
       //    this.chartOptions.xAxis.plotLines = [{
@@ -176,8 +187,8 @@ export class HeatmapComponent implements OnInit {
       // } else {
       //    this.chartOptions.xAxis.plotLines = [];
       // }
-      const maxWidth: number = $( window ).width() as number - 100;
-      const idealWidth = 200 + this.chartData.columns.length * 6;
+      const maxWidth: number = $(window).width() as number - 100;
+      const idealWidth = 200 + this.chartData.columns.length * this.COLUMNSIZEFACTOR;
 
       if (idealWidth > maxWidth) {
          this.chartWidth = maxWidth;
@@ -186,7 +197,7 @@ export class HeatmapComponent implements OnInit {
          this.chartWidth = idealWidth;
          this.chartOptions.yAxis.labels.enabled = true;
       }
-      this.chartHeight = 200 + this.chartData.rows.length * 8;
+      this.chartHeight = 200 + this.chartData.rows.length * this.ROWSIZEFACTOR;
       this.updateFlag = true;
       this.resultService.heatmapIsLoading = false;
       this.scroller.scrollToAnchor('heatmap');
@@ -202,9 +213,20 @@ export class HeatmapComponent implements OnInit {
             inverted: true,
             events: {
                redraw: (e: any) => {
+                  const chart = e.target;
                   // adapt chart size
-                  e.target.reflow();
-               }
+                  chart.reflow();
+                  // draw lines in chart
+                  this.drawBiclusterLines(chart.plotLeft, chart.plotTop, chart.xAxis[0].minPixelPadding, chart.yAxis[0].minPixelPadding);
+                  chart.myLine.destroy();
+                  chart.myLine = chart.renderer.path(this.lineCoords)
+                     .attr({
+                        'stroke-width': 4,
+                        stroke: 'black',
+                        zIndex: 3
+                     })
+                     .add();
+               },
             }
          },
 
@@ -305,6 +327,39 @@ export class HeatmapComponent implements OnInit {
          }],
 
       }
+   }
+
+   public drawBiclusterLines(x: number, y: number, xPadding: number, yPadding: number) {
+      // reset line coords
+      this.lineCoords = [];
+
+      const seenSamples: Set<string> = new Set([]);
+
+      // padding applies to both sides
+      xPadding = xPadding * 2;
+      yPadding = yPadding * 2;
+      let nNewSamples = 0;
+      this.selectedBiclusters.forEach(bicluster => {
+         nNewSamples = 0;
+         bicluster.samples.forEach( (sample: string) => {
+            if (!seenSamples.has(sample)) {
+               nNewSamples ++;
+               seenSamples.add(sample);
+            }
+         })
+
+         // 'L' with two coords to draw free line
+         this.lineCoords.push(...['M', x - 1, y, 'H', x + nNewSamples * yPadding + 1]);
+         this.lineCoords.push(...['M', x, y - 1, 'V', y + bicluster.genes.length * xPadding + 1]);
+
+         x = x + nNewSamples * yPadding;
+         y = y + bicluster.genes.length * xPadding;
+
+         this.lineCoords.push(...['M', x + 1, y, 'H', x - nNewSamples * yPadding - 1]);
+         this.lineCoords.push(...['M', x, y + 1, 'V', y - bicluster.genes.length * xPadding - 1]);
+
+      });
+
    }
 
 }
