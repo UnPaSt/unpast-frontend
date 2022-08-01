@@ -77,7 +77,7 @@
         </div>
         <div
           class="col-md-6 mb-3"
-          *ngIf="selectedClusteringMethod == 'DESMOND'"
+          *ngIf="selectedClusteringMethod === 'DESMOND'"
         >
           <label for="inputAlpha" class="form-label">Alpha</label>
           <input
@@ -107,7 +107,7 @@
         </div>
         <div
           class="col-md-6 mb-3"
-          *ngIf="selectedClusteringMethod == 'Louvain'"
+          *ngIf="selectedClusteringMethod === 'Louvain'"
         >
           <label for="inputR" class="form-label">r</label>
           <input

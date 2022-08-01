@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Bicluster, Task, TaskResult } from 'src/app/interfaces';
@@ -9,7 +9,7 @@ import { ResultServiceService } from 'src/app/services/result/result-service.ser
   templateUrl: './bicluster-table.component.html',
   styleUrls: ['./bicluster-table.component.scss']
 })
-export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
 
   public _taskData?: Task;
   @Input() set taskData(value: Task) {
@@ -38,9 +38,6 @@ export class BiclusterTableComponent implements OnInit, OnDestroy, AfterViewInit
   ngAfterViewInit(): void {
     this.setTableSettings();
     this.activateCustomSearch();
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

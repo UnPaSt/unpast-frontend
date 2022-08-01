@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ViewportScroller } from "@angular/common";
 
@@ -8,7 +8,7 @@ import { ViewportScroller } from "@angular/common";
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss']
 })
-export class ModalComponent implements OnInit {
+export class ModalComponent {
 
   @ViewChild('modalContainer') modalContainer!: NgbModal;
 
@@ -32,9 +32,6 @@ export class ModalComponent implements OnInit {
   closeResult = '';
 
   constructor(private modalService: NgbModal, public scroller: ViewportScroller) { }
-
-  ngOnInit(): void {
-  }
 
   openModal() {
     this.modalService.open(this.modalContainer, { ariaLabelledBy: 'modal-title', centered: true }).result.then((result) => {

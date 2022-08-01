@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { ParametersComponent } from './components/parameters/parameters.component';
-import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PreviousAnalysesComponent } from './pages/landing/components/previous-analyses/previous-analyses.component';
@@ -29,7 +28,6 @@ import { DrugstoneComponent } from './pages/result/components/drugstone/drugston
         AppComponent,
         LandingComponent,
         ParametersComponent,
-        FileUploadComponent,
         NavbarComponent,
         PreviousAnalysesComponent,
         StartTaskComponent,

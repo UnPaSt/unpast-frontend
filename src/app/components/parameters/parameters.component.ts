@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {TaskService} from 'src/app/services/task/task.service';
 import { BinarizationAlgorithm, ClusteringAlgorithm, TaskParameters } from 'src/app/interfaces';
 
@@ -7,7 +7,7 @@ import { BinarizationAlgorithm, ClusteringAlgorithm, TaskParameters } from 'src/
     templateUrl: './parameters.component.html',
     styleUrls: ['./parameters.component.scss']
 })
-export class ParametersComponent implements OnInit {
+export class ParametersComponent {
 
     @ViewChild('inputEmail') inputEmail!: ElementRef;
     @ViewChild('taskForm') taskForm!: ElementRef;
@@ -29,9 +29,6 @@ export class ParametersComponent implements OnInit {
 
     public paramtersValid = true;
     public isSubmitting = false;
-
-    ngOnInit(): void {
-    }
 
     public validateParameters() {
         this.paramtersValid = this.taskForm.nativeElement.classList.contains('ng-valid');

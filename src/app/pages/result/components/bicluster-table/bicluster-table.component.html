@@ -1,7 +1,7 @@
 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#biclusterTableOptions" aria-expanded="false" aria-controls="biclusterTableOptions"><i class="bi bi-funnel"></i> Filter</button>
-  <button class="btn btn-primary" type="button" (click)="displayHeatmap()" [disabled]="(resultService.selectedBiclusters | json) == '{}' || resultService.heatmapIsLoading || !resultService.heatmapDataLoaded"><i class="bi bi-calendar3-week"></i> Heatmap</button>
-  <button class="btn btn-primary" type="button" (click)="displayNetwork()" [disabled]="(resultService.selectedBiclusters | json) == '{}'"><i class="bi bi-diagram-2"></i> Network</button>
+  <button class="btn btn-primary" type="button" (click)="displayHeatmap()" [disabled]="(resultService.selectedBiclusters | json) === '{}' || resultService.heatmapIsLoading || !resultService.heatmapDataLoaded"><i class="bi bi-calendar3-week"></i> Heatmap</button>
+  <button class="btn btn-primary" type="button" (click)="displayNetwork()" [disabled]="(resultService.selectedBiclusters | json) === '{}'"><i class="bi bi-diagram-2"></i> Network</button>
 </div>
 
 <div class="collapse" id="biclusterTableOptions">

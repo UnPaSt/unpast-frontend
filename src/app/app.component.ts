@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TaskService } from './services/task/task.service';
 
 
@@ -7,7 +7,7 @@ import { TaskService } from './services/task/task.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Encore';
 
   public domain = window.location.origin;
