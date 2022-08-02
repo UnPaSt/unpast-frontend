@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Task } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
@@ -10,6 +10,8 @@ import { TaskService } from 'src/app/services/task/task.service';
   styleUrls: ['./result.component.scss']
 })
 export class ResultComponent implements OnInit {
+
+  @ViewChild('tabsResultTab') resultTab!: any;
 
   public key: string = '';
   public taskData: Task = {
@@ -55,6 +57,9 @@ export class ResultComponent implements OnInit {
       console.log('updating task')
       await this.delay(5000);
       this.getTask(), 1
+    } else {
+      // open result tab
+      this.resultTab.nativeElement.click();
     }
   }
 
