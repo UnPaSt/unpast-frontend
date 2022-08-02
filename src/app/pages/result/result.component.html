@@ -17,8 +17,9 @@
 >
   <li class="nav-item" role="presentation">
     <button
+      #tabsResultTab
       class="nav-link btn btn-secondary text-dark"
-      id="tabs-result-tab"
+      id="tabsResultTab"
       data-bs-toggle="tab"
       data-bs-target="#tabs-result"
       type="button"
@@ -44,7 +45,7 @@
     class="tab-pane fade"
     id="tabs-result"
     role="tabpanel"
-    aria-labelledby="tabs-result-tab"
+    aria-labelledby="tabsResultTab"
   >
     <div class="container-fluid px-4 py-5 text-center" *ngIf="taskData.result">
       <h1 class="display-8 fw-bold">Task Result</h1>
