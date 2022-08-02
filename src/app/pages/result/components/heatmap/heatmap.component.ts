@@ -221,7 +221,7 @@ export class HeatmapComponent implements OnInit {
                   chart.myLine.destroy();
                   chart.myLine = chart.renderer.path(this.lineCoords)
                      .attr({
-                        'stroke-width': 4,
+                        'stroke-width': 2,
                         stroke: 'black',
                         zIndex: 3
                      })
