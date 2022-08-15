@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -6,14 +6,10 @@ import { environment } from 'src/environments/environment';
   templateUrl: './examples.component.html',
   styleUrls: ['./examples.component.scss']
 })
-export class ExamplesComponent implements OnInit {
+export class ExamplesComponent {
 
   public linkExample: string = environment.api + 'download_example'
 
   constructor() { }
-
-  ngOnInit(): void {
-    console.log(this.linkExample)
-  }
 
 }
