@@ -54,7 +54,6 @@ export class ResultComponent implements OnInit {
 
   public async checkTaskStatus() {
     if (this.taskData.status !== 'Done') {
-      console.log('updating task')
       await this.delay(5000);
       this.getTask(), 1
     } else {

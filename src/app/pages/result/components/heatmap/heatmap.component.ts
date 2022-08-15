@@ -6,6 +6,7 @@ import { TaskService } from 'src/app/services/task/task.service';
 import { Bicluster } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
 import { ViewportScroller } from '@angular/common';
+import * as _ from 'lodash';
 
 More(Highcharts);
 Heatmap(Highcharts);
@@ -22,8 +23,13 @@ export class HeatmapComponent implements OnInit {
    private lineCoords: any[] = [];
    private selectedBiclusters: Bicluster[] = [];
 
+   private updateChartLines = false;
+
    private COLUMNSIZEFACTOR = 6;
    private ROWSIZEFACTOR = 8;
+
+   private columnLookup: any = {};
+   private rowLookup: any = {};
 
    @Input() set key(value: string) {
       this.taskService.getTaskData(value).then((response: any) => {
@@ -64,6 +70,7 @@ export class HeatmapComponent implements OnInit {
       this.self = this;
       this.initChart();
       this.resultService._biclusterSelectedHeatmap$.subscribe((biclusters: Bicluster[]) => {
+         this.updateChartLines = true;
          this.selectedBiclusters = biclusters;
          this.updateHeatmap(biclusters);
       });
@@ -79,14 +86,6 @@ export class HeatmapComponent implements OnInit {
          .add();
    }
 
-   public removeLastOccurenceByValue(array: any[], value: any) {
-      const index = array.lastIndexOf(value);
-      if (index !== -1) {
-         array.splice(index, 1);
-      }
-      return array
-   }
-
    public updateHeatmap(biclusters: Bicluster[]) {
       /** Wrapper of heatmap update functions to show loading */
       this.resultService.heatmapIsLoading = true;
@@ -95,64 +94,75 @@ export class HeatmapComponent implements OnInit {
       })
    }
 
+   private pushToBeginning(list: any[], listToPush: any[]) {
+      let listToPushIntern = JSON.parse(JSON.stringify(listToPush));
+      listToPushIntern.push(...list);
+      return Array.from(new Set(listToPushIntern));
+   }
+
+   private intersect(listOfArrays: any[]) {
+      return _.intersection.apply(_, listOfArrays);
+   }
+
+   private union(a: any[], b: any[]) {
+      return [...new Set([...a, ...b])]
+   }
+
+   private difference(a: any[], b: any[]) {
+      const aIntern = JSON.parse(JSON.stringify(a));
+      aIntern.filter((el: any) => !b.includes(el));
+      return aIntern
+   }
+
    public formatHeatmapData(data: any, biclusters: Bicluster[]) {
 
       const selectedSamples = Object.values(biclusters).map(bicluster => bicluster.samples);
       const selectedGenes = Object.values(biclusters).map(bicluster => bicluster.genes);
-      // const selectedSamplesIndices = Object.values(biclusters).map(bicluster => bicluster.sample_indices);
-      // const selectedGenesIndices = Object.values(biclusters).map(bicluster => bicluster.gene_indices);
 
       const selectedColumns = [...new Set(selectedSamples.flat(1))];
       const selectedRows = [...new Set(selectedGenes.flat(1))];
-      // const selectedColumnsIndices = [...new Set(selectedSamplesIndices.flat(1))];
-      // const selectedRowsIndices = [...new Set(selectedGenesIndices.flat(1))];
 
-      // // descending order
-      // selectedColumnsIndices.sort(function(a,b){ return b - a; });
-      // selectedRowsIndices.sort(function(a,b){ return b - a; });
-
-      if (selectedColumns) {
-         let columnsSorted: any = JSON.parse(JSON.stringify(selectedColumns));
-         columnsSorted.push(...data.columns);
-         for (const value of selectedColumns) {
-            columnsSorted = this.removeLastOccurenceByValue(columnsSorted, value);
+      // sort columns for bicluster
+      let columnsSorted: any[] = JSON.parse(JSON.stringify(data.columns));
+      for (let i = selectedSamples.length - 1; i >= 0; i--) {
+         const sample = selectedSamples[i];
+         columnsSorted = this.pushToBeginning(columnsSorted, sample);
+         for (let j = i; j < selectedSamples.length; j++) {
+            // const subset = i > 0 ? selectedSamples.slice(i, j) : selectedSamples.slice(j);
+            const subset = selectedSamples.slice(i, j+1);
+            // @ts-ignore
+            const leadingList: string[] = this.intersect(subset);
+            columnsSorted = this.pushToBeginning(columnsSorted, leadingList);
          }
-         data.columns = columnsSorted;
       }
-
-      if (selectedRows) {
-         let rowsSorted: any = JSON.parse(JSON.stringify(selectedRows));
-         rowsSorted.push(...data.rows);
-         for (const value of selectedRows) {
-            rowsSorted = this.removeLastOccurenceByValue(rowsSorted, value);
-         }
-         data.rows = rowsSorted;
-      }
+      data.columns = columnsSorted;
 
       // remove rows that are not selected to make heatmap smaller
       data.rows = data.rows.filter((row: string) => selectedRows.includes(row));
+      // sort rows
+      data.rows = this.pushToBeginning(data.rows, selectedRows);
 
-      const columnLookup: any = {};
+      this.columnLookup = {};
       for (const i in data.columns) {
-         columnLookup[data.columns[i]] = parseInt(i);
+         this.columnLookup[data.columns[i]] = parseInt(i);
       }
 
-      const rowLookup: any = {};
+      this.rowLookup = {};
       for (const i in data.rows) {
-         rowLookup[data.rows[i]] = parseInt(i);
+         this.rowLookup[data.rows[i]] = parseInt(i);
       }
 
+      // assign values to correct position in heatmap
       const valuesFormatted: any = [];
       for (const value of data.values) {
-         const row = rowLookup[value[0]];
+         const row = this.rowLookup[value[0]];
          if (row === undefined) {
             // gene that was not selected
             continue
          }
-         const column = columnLookup[value[1]];
+         const column = this.columnLookup[value[1]];
          valuesFormatted.push([row, column, value[2]]);
       }
-
 
       data.values = valuesFormatted;
       this.chartData = data;
@@ -166,27 +176,6 @@ export class HeatmapComponent implements OnInit {
       this.chartOptions.xAxis.categories = this.chartData.rows;
       this.chartOptions.series[0].data = this.chartData.values;
 
-      // if (selectedColumns.length) {
-      //    this.chartOptions.yAxis.plotLines = [{
-      //       width: 4,
-      //       color: '#ff0000',
-      //       value: selectedColumns.length - 0.5,
-      //       zIndex: 3
-      //    }]
-      // } else {
-      //    this.chartOptions.yAxis.plotLines = [];
-      // }
-
-      // if (selectedRows.length) {
-      //    this.chartOptions.xAxis.plotLines = [{
-      //       width: 2,
-      //       color: '#ff0000',
-      //       value: selectedRows.length-0.5,
-      //       zIndex: 3
-      //     }]
-      // } else {
-      //    this.chartOptions.xAxis.plotLines = [];
-      // }
       const maxWidth: number = $(window).width() as number - 100;
       const idealWidth = 200 + this.chartData.columns.length * this.COLUMNSIZEFACTOR;
 
@@ -216,17 +205,22 @@ export class HeatmapComponent implements OnInit {
                   const chart = e.target;
                   // adapt chart size
                   chart.reflow();
-                  // draw lines in chart
-                  this.drawBiclusterLines(chart.plotLeft, chart.plotTop, chart.xAxis[0].minPixelPadding, chart.yAxis[0].minPixelPadding);
-                  chart.myLine.destroy();
-                  chart.myLine = chart.renderer.path(this.lineCoords)
-                     .attr({
-                        'stroke-width': 2,
-                        stroke: 'black',
-                        zIndex: 3
-                     })
-                     .add();
+                  // control trigger manually, this would get triggered twice otherwise
+                  if (this.updateChartLines) {
+                     // draw lines in chart
+                     this.drawBiclusterLines(chart.plotLeft, chart.plotTop, chart.xAxis[0].minPixelPadding, chart.yAxis[0].minPixelPadding, chart.yAxis[0].categories);
+                     chart.myLine.destroy();
+                     chart.myLine = chart.renderer.path(this.lineCoords)
+                        .attr({
+                           'stroke-width': 1,
+                           stroke: 'black',
+                           zIndex: 3
+                        })
+                        .add();
+                  }
+                  this.updateChartLines = false;
                },
+
             }
          },
 
@@ -329,8 +323,10 @@ export class HeatmapComponent implements OnInit {
       }
    }
 
-   public drawBiclusterLines(x: number, y: number, xPadding: number, yPadding: number) {
+   public drawBiclusterLines(x: number, y: number, xPadding: number, yPadding: number, categoryLabels: string[]) {
       // reset line coords
+      const topLeftX = x;
+
       this.lineCoords = [];
 
       const seenSamples: Set<string> = new Set([]);
@@ -338,28 +334,53 @@ export class HeatmapComponent implements OnInit {
       // padding applies to both sides
       xPadding = xPadding * 2;
       yPadding = yPadding * 2;
-      let nNewSamples = 0;
       this.selectedBiclusters.forEach(bicluster => {
-         nNewSamples = 0;
-         bicluster.samples.forEach( (sample: string) => {
-            if (!seenSamples.has(sample)) {
-               nNewSamples ++;
-               seenSamples.add(sample);
+         const biclusterSamples = new Set(bicluster.samples);
+         let nNewSamples = 0;
+         let nOldSamplesCur = 0;
+         let nOldSamples = 0;
+         let outlineSeenSamples = false;
+         for (const [index, sample] of categoryLabels.entries()) {
+            if (biclusterSamples.has(sample)) {
+               if (!seenSamples.has(sample)) {
+                  nNewSamples++;
+                  seenSamples.add(sample);
+               } else {
+                  nOldSamples++;
+                  nOldSamplesCur++;
+                  outlineSeenSamples = true;
+               }
+            } else {
+               if (!seenSamples.has(sample)) {
+                  // draw last box outside of loop to merge with new samples
+                  break
+               }
+               if (outlineSeenSamples) {
+                  outlineSeenSamples = false;
+                  this.outlineFields(topLeftX + (index - nOldSamplesCur) * yPadding, y, nOldSamplesCur, bicluster.genes.length, xPadding, yPadding);
+                  nOldSamplesCur = 0;
+               }
             }
-         })
-
-         // 'L' with two coords to draw free line
-         this.lineCoords.push(...['M', x - 1, y, 'H', x + nNewSamples * yPadding + 1]);
-         this.lineCoords.push(...['M', x, y - 1, 'V', y + bicluster.genes.length * xPadding + 1]);
-
+         }
+         this.outlineFields(x, y, nNewSamples, bicluster.genes.length, xPadding, yPadding);
          x = x + nNewSamples * yPadding;
          y = y + bicluster.genes.length * xPadding;
-
-         this.lineCoords.push(...['M', x + 1, y, 'H', x - nNewSamples * yPadding - 1]);
-         this.lineCoords.push(...['M', x, y + 1, 'V', y - bicluster.genes.length * xPadding - 1]);
-
       });
+   }
 
+   private outlineFields(x: number, y: number, nCol: number, nRows: number, xPadding: number, yPadding: number) {
+      // x = x top left
+      // y = y top left
+
+      // 'L' with two coords to draw free line
+      this.lineCoords.push(...['M', x - 1, y, 'H', x + nCol * yPadding + 1]);
+      this.lineCoords.push(...['M', x, y - 1, 'V', y + nRows * xPadding + 1]);
+
+      x = x + nCol * yPadding;
+      y = y + nRows * xPadding;
+
+      this.lineCoords.push(...['M', x + 1, y, 'H', x - nCol * yPadding - 1]);
+      this.lineCoords.push(...['M', x, y + 1, 'V', y - nRows * xPadding - 1]);
    }
 
 }
