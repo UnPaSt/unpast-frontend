@@ -15,7 +15,7 @@ export class ResultServiceService {
 
   constructor() { }
 
-  private _biclusterSelectedHeatmap = new Subject<Bicluster[]>();
+  private _biclusterSelectedHeatmap = new Subject<{ [key: string]: Bicluster; }>();
   private _biclusterSelectedNetwork = new Subject<Bicluster[]>();
 
   get _biclusterSelectedHeatmap$() {
@@ -35,7 +35,7 @@ export class ResultServiceService {
   }
 
   public triggerBiclusterSelectionHeatmap() {
-    this._biclusterSelectedHeatmap.next(Object.values(this.selectedBiclusters));
+    this._biclusterSelectedHeatmap.next(this.selectedBiclusters);
   }
 
   public triggerBiclusterSelectionNetwork() {

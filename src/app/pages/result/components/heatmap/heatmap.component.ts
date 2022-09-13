@@ -21,7 +21,7 @@ export class HeatmapComponent implements OnInit {
 
    public originalData: any = {};
    private lineCoords: any[] = [];
-   private selectedBiclusters: Bicluster[] = [];
+   private selectedBiclusters: { [key: string]: Bicluster; } = {};
 
    private updateChartLines = false;
 
@@ -37,7 +37,7 @@ export class HeatmapComponent implements OnInit {
             return
          }
          this.originalData = JSON.parse(JSON.stringify(response));
-         this.formatHeatmapData(response, []);
+         this.formatHeatmapData(response, {});
          this.resultService.heatmapDataLoaded = true;
       })
    };
@@ -69,7 +69,7 @@ export class HeatmapComponent implements OnInit {
    ngOnInit(): void {
       this.self = this;
       this.initChart();
-      this.resultService._biclusterSelectedHeatmap$.subscribe((biclusters: Bicluster[]) => {
+      this.resultService._biclusterSelectedHeatmap$.subscribe((biclusters: { [key: string]: Bicluster; }) => {
          this.updateChartLines = true;
          this.selectedBiclusters = biclusters;
          this.updateHeatmap(biclusters);
@@ -86,12 +86,18 @@ export class HeatmapComponent implements OnInit {
          .add();
    }
 
-   public updateHeatmap(biclusters: Bicluster[]) {
+   public updateHeatmap(biclusters: { [key: string]: Bicluster; }) {
       /** Wrapper of heatmap update functions to show loading */
       this.resultService.heatmapIsLoading = true;
       setTimeout(() => {
          this.formatHeatmapData(JSON.parse(JSON.stringify(this.originalData)), biclusters);
       })
+   }
+
+   private pushToEnd(list: any[], listToPush: any[]) {
+      let listIntern = JSON.parse(JSON.stringify(list));
+      listIntern.push(...listToPush);
+      return Array.from(new Set(listIntern.reverse())).reverse();
    }
 
    private pushToBeginning(list: any[], listToPush: any[]) {
@@ -109,33 +115,122 @@ export class HeatmapComponent implements OnInit {
    }
 
    private difference(a: any[], b: any[]) {
-      const aIntern = JSON.parse(JSON.stringify(a));
-      aIntern.filter((el: any) => !b.includes(el));
+      let aIntern = JSON.parse(JSON.stringify(a));
+      aIntern = aIntern.filter((el: any) => !b.includes(el));
       return aIntern
    }
 
-   public formatHeatmapData(data: any, biclusters: Bicluster[]) {
+   // public sortSamples(columnsSorted, selectedSamples) {
+   //    for (let i = selectedSamples.length - 1; i >= 0; i--) {
+   //       const sample = selectedSamples[i];
+   //       columnsSorted = this.pushToBeginning(columnsSorted, sample);
+   //       for (let j = i; j < selectedSamples.length; j++) {
+   //          const subset = selectedSamples.slice(i, j+1);
+   //          // @ts-ignore
+   //          const leadingList: string[] = this.intersect(subset);
+   //          console.log(i, j+1)
+   //          columnsSorted = this.pushToBeginning(columnsSorted, leadingList);
+   //          for (let k = i; k < j; k++) {
+   //             const subset = selectedSamples.slice(i, j+1);
+   //             // @ts-ignore
+   //             const leadingList: string[] = this.intersect(subset);
+   //             columnsSorted = this.pushToBeginning(columnsSorted, leadingList);
+   //          }
+   //       }
+   //    }
+   // }
+   
+   private occurenceInSampleSets(sample: string, samplesSets: any[]) {
+      return samplesSets.some((sampleSet) => sampleSet.has(sample))
+   }
 
-      const selectedSamples = Object.values(biclusters).map(bicluster => bicluster.samples);
-      const selectedGenes = Object.values(biclusters).map(bicluster => bicluster.genes);
-
-      const selectedColumns = [...new Set(selectedSamples.flat(1))];
-      const selectedRows = [...new Set(selectedGenes.flat(1))];
-
-      // sort columns for bicluster
-      let columnsSorted: any[] = JSON.parse(JSON.stringify(data.columns));
-      for (let i = selectedSamples.length - 1; i >= 0; i--) {
-         const sample = selectedSamples[i];
-         columnsSorted = this.pushToBeginning(columnsSorted, sample);
-         for (let j = i; j < selectedSamples.length; j++) {
-            // const subset = i > 0 ? selectedSamples.slice(i, j) : selectedSamples.slice(j);
-            const subset = selectedSamples.slice(i, j+1);
-            // @ts-ignore
-            const leadingList: string[] = this.intersect(subset);
-            columnsSorted = this.pushToBeginning(columnsSorted, leadingList);
+   private removeSamplesFromSampleSets(samples: string[], samplesSets: any[]) {
+      for (let sample of samples) {
+         for (let i = 0; i < samplesSets.length; i++) {
+            // no need to check for existence
+            samplesSets[i].delete(sample)
          }
       }
-      data.columns = columnsSorted;
+      return samplesSets
+   }
+
+   public sortSamples(sampleSets: Array<Set<string>>, samplesSorted: string[] = []): string[] {
+      if (!sampleSets.length) {
+         return samplesSorted
+      }
+
+      // for all
+      for (let sample of sampleSets[0]) {
+         if (this.occurenceInSampleSets(sample, sampleSets.slice(1))) {
+            samplesSorted.push(sample)
+         }
+      }
+      sampleSets = this.removeSamplesFromSampleSets(samplesSorted, sampleSets);
+
+      // for subsets
+      for (let sample of sampleSets[0]) {
+         for (let i = 1; i < sampleSets.length; i++) {
+            for (let j = i+1; j < sampleSets.length; j++) {
+               console.log('i, j')
+               console.log(i, j)
+               if (this.occurenceInSampleSets(sample, sampleSets.slice(i, j))) {
+                  samplesSorted.push(sample)
+               }
+            }
+            if (this.occurenceInSampleSets(sample, [sampleSets[i]])) {
+               samplesSorted.push(sample)
+            }
+         }
+      }
+      sampleSets = this.removeSamplesFromSampleSets(samplesSorted, sampleSets);
+
+      // first sample set is done
+      sampleSets = sampleSets.slice(1);
+      return this.sortSamples(sampleSets, samplesSorted)
+   }
+
+   public formatHeatmapData(data: any, biclusters: { [key: string]: Bicluster; }) {
+
+      const selectedSamples = Object.values(biclusters).map(bicluster => new Set(bicluster.samples));
+      const selectedGenes = Object.values(biclusters).map(bicluster => bicluster.genes);
+
+      const selectedColumns = [...new Set([...selectedSamples.flat(1)])];
+      const selectedRows = [...new Set(selectedGenes.flat(1))];
+      this.chartOptions.xAxis[1].categories = [];
+      // get bicluster axis labels
+      for (const [key, value] of Object.entries(biclusters)) {
+         for (let i = 0; i < value.genes.length; i++) {
+            this.chartOptions.xAxis[1].categories.push(Number(key));
+         }
+      }
+
+      // // sort columns for bicluster
+      // let columnsSorted: any[] = JSON.parse(JSON.stringify(data.columns));
+      // for (let i = selectedSamples.length - 1; i >= 0; i--) {
+      //    const sample = selectedSamples[i];
+      //    columnsSorted = this.pushToBeginning(columnsSorted, sample);
+      //    for (let j = i; j < selectedSamples.length; j++) {
+      //       const subset = selectedSamples.slice(i, j+1);
+      //       // @ts-ignore
+      //       let leadingList: string[] = this.intersect(subset);
+      //       for (let k = i+1; k < j; k++) {
+      //          console.log('i, k, k+1, j+1')
+      //          console.log(i, k, k+1, j+1)
+      //          let subset = [...selectedSamples.slice(i, k), ...selectedSamples.slice(k+1, j+1)];
+      //          subset = this.difference(this.intersect(subset), selectedSamples.slice(k, k+1).flat(1))
+      //          console.log(this.difference([1, 2, 3], [1]))
+      //          console.log('subset', subset)
+      //          // @ts-ignore
+      //          leadingList = this.pushToBeginning(leadingList, subset);
+      //       }
+      //       console.log(i, j+1)
+      //       columnsSorted = this.pushToBeginning(columnsSorted, leadingList);
+
+      //    }
+      // }
+
+      const columnsSorted = this.sortSamples(selectedSamples)
+      data.columns = this.pushToBeginning(data.columns, columnsSorted);
 
       // remove rows that are not selected to make heatmap smaller
       data.rows = data.rows.filter((row: string) => selectedRows.includes(row));
@@ -173,7 +268,7 @@ export class HeatmapComponent implements OnInit {
       }
 
       this.chartOptions.yAxis.categories = this.chartData.columns;
-      this.chartOptions.xAxis.categories = this.chartData.rows;
+      this.chartOptions.xAxis[0].categories = this.chartData.rows;
       this.chartOptions.series[0].data = this.chartData.values;
 
       const maxWidth: number = $(window).width() as number - 100;
@@ -240,7 +335,7 @@ export class HeatmapComponent implements OnInit {
          //    x: 40
          // },
 
-         xAxis: {
+         xAxis: [{
             categories: this.chartData.columns,
             tickLength: 1,
             tickWidth: 1,
@@ -255,8 +350,19 @@ export class HeatmapComponent implements OnInit {
                   color: 'black',
                   fontSize: '7px'
                }
+            },
+            // title: {
+            //    text: 'Gene'
+            // }
+         }, 
+         {  
+            categories: this.chartData.columns,
+            linkedTo: 0,
+            opposite: false,
+            title: {
+               text: 'Cluster'
             }
-         },
+         }],
 
          yAxis: {
             categories: this.chartData.rows,
@@ -334,7 +440,7 @@ export class HeatmapComponent implements OnInit {
       // padding applies to both sides
       xPadding = xPadding * 2;
       yPadding = yPadding * 2;
-      this.selectedBiclusters.forEach(bicluster => {
+      Object.values(this.selectedBiclusters).forEach(bicluster => {
          const biclusterSamples = new Set(bicluster.samples);
          let nNewSamples = 0;
          let nOldSamplesCur = 0;
