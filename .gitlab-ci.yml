@@ -59,8 +59,8 @@ deploy:dev:
     - docker info
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t gitlab.rrz.uni-hamburg.de:4567/cosy-bio/encore/frontend:dev -f ./Dockerfile .
-    - docker push gitlab.rrz.uni-hamburg.de:4567/cosy-bio/encore/frontend:dev
+    - docker build -t gitlab.rrz.uni-hamburg.de:4567/cosy-bio/unpast/frontend:dev -f ./Dockerfile .
+    - docker push gitlab.rrz.uni-hamburg.de:4567/cosy-bio/unpast/frontend:dev
   dependencies:
     - build
 
@@ -79,7 +79,7 @@ deploy:prod:
     - docker info
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t gitlab.rrz.uni-hamburg.de:4567/cosy-bio/encore/frontend:prod -f ./Dockerfile .
-    - docker push gitlab.rrz.uni-hamburg.de:4567/cosy-bio/encore/frontend:prod
+    - docker build -t gitlab.rrz.uni-hamburg.de:4567/cosy-bio/unpast/frontend:prod -f ./Dockerfile .
+    - docker push gitlab.rrz.uni-hamburg.de:4567/cosy-bio/unpast/frontend:prod
   dependencies:
     - build

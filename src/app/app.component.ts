@@ -8,7 +8,7 @@ import { TaskService } from './services/task/task.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'Encore';
+  title = 'Unpast';
 
   public domain = window.location.origin;
   public openModal = false;

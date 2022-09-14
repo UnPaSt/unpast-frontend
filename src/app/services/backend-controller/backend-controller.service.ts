@@ -56,7 +56,6 @@ export class BackendControllerService {
     }
   }
 
-
   public async getTaskData(task_id: string): Promise<any> {
     try {
       const response = lastValueFrom(this.http.get<any>(`${environment.api}get_task_data?id=${task_id}`));
