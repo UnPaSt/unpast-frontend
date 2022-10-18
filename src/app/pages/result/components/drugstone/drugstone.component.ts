@@ -17,7 +17,7 @@ export class DrugstoneComponent implements OnInit {
     public scroller: ViewportScroller) { }
 
   @Input() public network: any = JSON.stringify({ 'nodes': [] });
-  public config: any = { "showSidebar": false, "identifier": "symbol", "title": "Protein interaction network of selected bicluster", "nodeShadow": true, "edgeShadow": false, "autofillEdges": true, "showLegend": true, "showFooter": false, "showOverview": false, "showQuery": false, "showItemSelector": false, "showAdvAnalysis": false, "showSelection": false, "showTasks": false, "showLegendEdges": false, "physicsOn": true , "interactionProteinProtein":"BioGRID"};
+  public config: any = { "showSidebar": false, "identifier": "symbol", "title": "Protein interaction network of selected bicluster", "nodeShadow": true, "edgeShadow": false, "autofillEdges": true, "showLegend": true, "showFooter": false, "showOverview": false, "showQuery": false, "showItemSelector": false, "showAdvAnalysis": false, "showSelection": false, "showTasks": false, "showLegendEdges": false, "physicsOn": true , "interactionProteinProtein":"NeDRex"};
 
   ngOnInit(): void {
     this.resultService._biclusterSelectedNetwork$.subscribe((biclusters: Bicluster[]) => {
