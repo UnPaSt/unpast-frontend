@@ -32,12 +32,17 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
   public minSamples: number = NaN;
   public maxSamples: number = NaN;
 
+  public buttonDrugstoneLink = '';
 
   constructor(private renderer: Renderer2, public resultService: ResultServiceService) { }
 
   ngAfterViewInit(): void {
     this.setTableSettings();
     this.activateCustomSearch();
+
+    this.resultService._biclusterSelected$.subscribe((biclusters: Bicluster[]) => {
+      this.updateDrugstoneButton(biclusters);
+    });
   }
 
   ngOnDestroy(): void {
@@ -167,6 +172,17 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
   public displayNetwork() {
     this.resultService.triggerBiclusterSelectionNetwork();
     this.resultService.showNetwork = true;
+  }
+
+  public updateDrugstoneButton(biclusters: Bicluster[]) {
+    const nodeList: any[] = [];
+    for (let i: number = 0; i < biclusters.length; i++) {
+      const bicluster = biclusters[i];
+      bicluster.genes.forEach((gene: string) => {
+        nodeList.push(gene);
+      })
+    }
+    this.buttonDrugstoneLink = nodeList.join(',');
   }
 
 }

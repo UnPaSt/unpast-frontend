@@ -44,4 +44,5 @@ export class DrugstoneComponent implements OnInit {
       this.scroller.scrollToAnchor('network');
     }, 100)
   }
+
 }
