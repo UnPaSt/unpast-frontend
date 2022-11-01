@@ -175,6 +175,10 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
   }
 
   public updateDrugstoneButton(biclusters: Bicluster[]) {
+    if (!biclusters) {
+      this.buttonDrugstoneLink = '';
+      return
+    }
     const nodeList: any[] = [];
     for (let i: number = 0; i < biclusters.length; i++) {
       const bicluster = biclusters[i];

@@ -29,14 +29,20 @@
   >
     <i class="bi bi-diagram-2"></i> Network
   </button>
-  <a [href]="'https://drugst.one?nodes=' + buttonDrugstoneLink" target="_blank">
-    <button
-      class="drugstone-button btn btn-primary"
-      [disabled]="buttonDrugstoneLink.length === 0"
-    >
-      Drugst.One
-    </button>
+  <a
+    *ngIf="buttonDrugstoneLink !== ''"
+    [href]="'https://drugst.one?nodes=' + buttonDrugstoneLink"
+    target="_blank"
+  >
+    <button class="drugstone-button btn btn-primary">Drugst.One</button>
   </a>
+  <button
+    class="drugstone-button btn btn-primary"
+    *ngIf="buttonDrugstoneLink === ''"
+    disabled
+  >
+    Drugst.One
+  </button>
 </div>
 
 <div class="collapse" id="biclusterTableOptions">
