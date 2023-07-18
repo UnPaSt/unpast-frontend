@@ -14,7 +14,8 @@ FROM nginx:alpine
 RUN apk add --upgrade apk-tools
 RUn apk upgrade --available
 
-COPY --from=build-stage /app/dist/frontend/* /usr/share/nginx/html/unpast/
+COPY --from=build-stage /app/dist/frontend/ /usr/share/nginx/html/unpast/
+COPY src/assets .
 
 COPY nginx/default.conf /etc/nginx/conf.d/
 
