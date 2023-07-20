@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . /app/
 
-RUN npm run build -- --base-href=./
+RUN npm run build -- --base-href=/unpast/
 
 FROM nginx:alpine
 RUN apk add --upgrade apk-tools
