@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Task } from 'src/app/interfaces';
@@ -20,7 +19,7 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
   public taskList: Task[] = [];
 
 
-  constructor(public taskService: TaskService, private router: Router, private route: ActivatedRoute) {
+  constructor(public taskService: TaskService) {
   }
 
   ngOnInit(): void {
@@ -72,8 +71,7 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
   }
 
   public navigateTo(path: string): void {
-    const url = this.router.createUrlTree([path], { relativeTo: this.route });
-    window.open(url.toString(), '_blank');
+    window.open(window.location.origin + window.location.pathname + path, '_blank');
   }
 
 }
