@@ -14,6 +14,8 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective)
   public dtElement!: DataTableDirective;
 
+  public domain = window.location.origin;
+
   public dtOptions: DataTables.Settings = {};
   public dtTrigger: Subject<any> = new Subject();
   public taskList: Task[] = [];
