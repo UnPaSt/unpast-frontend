@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Task } from 'src/app/interfaces';
@@ -14,14 +15,12 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
   @ViewChild(DataTableDirective)
   public dtElement!: DataTableDirective;
 
-  public domain = window.location;
-
   public dtOptions: DataTables.Settings = {};
   public dtTrigger: Subject<any> = new Subject();
   public taskList: Task[] = [];
 
 
-  constructor(public taskService: TaskService) {
+  constructor(public taskService: TaskService, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -71,4 +70,10 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
     const date = new Date(unix_timestamp * 1000);
     return date.toLocaleString();
   }
+
+  public navigateTo(path: string): void {
+    const url = this.router.createUrlTree([path], { relativeTo: this.route });
+    window.open(url.toString(), '_blank');
+  }
+
 }
