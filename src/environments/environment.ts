@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  api: "http://localhost:8002/"
+  api: "https://apps.cosy.bio/api-unpast/"
 };
 
 /*
