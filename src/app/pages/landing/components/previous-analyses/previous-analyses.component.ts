@@ -16,6 +16,7 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
 
   public dtOptions: DataTables.Settings = {};
   public dtTrigger: Subject<any> = new Subject();
+  
   public taskList: Task[] = [];
 
 
