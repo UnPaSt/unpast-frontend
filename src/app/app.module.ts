@@ -21,6 +21,7 @@ import { FileFormComponent } from './components/parameters/file-form/file-form.c
 import { HttpClientModule } from "@angular/common/http";
 import { BiclusterTableComponent } from './pages/result/components/bicluster-table/bicluster-table.component';
 import { DrugstoneComponent } from './pages/result/components/drugstone/drugstone.component';
+import { ClipboardButtonComponent } from './components/clipboard-button/clipboard-button.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { DrugstoneComponent } from './pages/result/components/drugstone/drugston
         FileFormComponent,
         BiclusterTableComponent,
         DrugstoneComponent,
+        ClipboardButtonComponent,
     ],
     imports: [
         BrowserModule,

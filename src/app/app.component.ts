@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   title = 'UnPaSt';
 
   public domain = window.location.origin;
+  public baseHref = '';
   public openModal = false;
   public taskId = '';
 
@@ -21,6 +22,11 @@ export class AppComponent implements OnInit {
       this.taskId = taskId;
       this.openModalFun()
     });
+
+    if (window.location.href.includes('unpast')) {
+      // in production
+      this.baseHref = '/unpast';
+    }
   }
 
   public openModalFun() {

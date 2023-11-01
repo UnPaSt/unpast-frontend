@@ -69,3 +69,8 @@ body {
 .bg-custom {
     background-color: $custom-color;
 }
+
+// invert button color in selected datatable rows
+table .selected .btn {
+  color: #ffffff;
+}

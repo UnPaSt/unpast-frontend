@@ -1,5 +1,5 @@
 
-export type BinarizationAlgorithm = 'GMM' | 'Jenks';
+export type BinarizationAlgorithm = 'GMM' | 'Jenks' | 'kmeans';
 export type ClusteringAlgorithm = 'Louvain' | 'WGCNA' | 'DESMOND';
 export type BiclusterDirecton = 'UP' | 'DOWN';
 
@@ -16,6 +16,8 @@ export interface TaskParameters {
     binarization: BinarizationAlgorithm,
     clustering: ClusteringAlgorithm,
     r: number,
+    ds: 0 | 1 | 2 | 3 | 4,
+    dch: number,
     mail: string,
     exprs: string
 }
@@ -31,13 +33,15 @@ export interface Bicluster {
     /**
    * Interface for biclusters in task result
    */
-    avgSNR: number,
+    SNR: number,
     n_genes: number,
     genes: string[],
     gene_indices: number[],
     n_samples: number,
     samples: string[],
     sample_indices: number[],
+    genes_up: string[],
+    genes_down: string[],
     direction: BiclusterDirecton
 }
 

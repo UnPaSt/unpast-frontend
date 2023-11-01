@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
-import { HttpClient } from "@angular/common/http";
 import { BackendControllerService } from 'src/app/services/backend-controller/backend-controller.service';
 
 
@@ -24,7 +23,7 @@ export class FileFormComponent implements OnInit {
     }
 
 
-    constructor(public fb: UntypedFormBuilder, private http: HttpClient, private backend: BackendControllerService) {
+    constructor(public fb: UntypedFormBuilder, private backend: BackendControllerService) {
     }
 
     ngOnInit() {
@@ -33,9 +32,30 @@ export class FileFormComponent implements OnInit {
         });
     }
 
+    private MAX_FILE_SIZE = 500; //MB
+
+    public fileTooLargeAlert = false;
+    public fileTypeWrongAlert = false;
+
     public selectFile({ event }: { event: any }) {
         if (event.target.files.length > 0) {
             this.file = event.target.files[0];
+
+            const size = this.file.size / 1024 / 1024; //MB
+            if (size > this.MAX_FILE_SIZE) {
+                this.fileTooLargeAlert = true;
+                return
+            } else {
+                this.fileTooLargeAlert = false
+            }
+
+            if (!(this.file.name.endsWith('.tsv') || this.file.name.endsWith('.txt') || this.file.name.endsWith('.gzip'))) {
+                this.fileTypeWrongAlert = true;
+                return
+            } else {
+                this.fileTypeWrongAlert = false
+            }
+
             this.displayedFileName = this.file.name;
         }
     }

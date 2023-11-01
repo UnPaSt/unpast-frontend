@@ -3,6 +3,8 @@ import { DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
 import { Bicluster, Task, TaskResult } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
+import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-bicluster-table',
@@ -16,6 +18,8 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
     this._taskData = value;
     setTimeout(() => {
       this.dtTrigger.next(true);
+      // @ts-ignore
+      $('[data-bs-toggle="tooltip"]').tooltip();
     })
   };
 
@@ -31,6 +35,8 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
   public maxGenes: number = NaN;
   public minSamples: number = NaN;
   public maxSamples: number = NaN;
+
+  public environment = environment;
 
 
   constructor(private renderer: Renderer2, public resultService: ResultServiceService) { }
@@ -63,7 +69,7 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
               return '';
             }
           },
-          targets: [3, 5],
+          targets: [],
         }],
       language: {
         emptyTable: 'No previous tasks',
@@ -71,15 +77,40 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
           emptyPanes: 'There are no panes to display.'
         }
       },
-      buttons: [
-        'copy', 'csv', 'excel'
-      ]
+      buttons: {
+        dom: {
+          button: {
+            className: 'btn'
+          }
+        },
+        buttons: [
+            {
+              extend: 'copy',
+              className: 'btn btn-primary',
+              title: `unpast_result_${this._taskData?.id}`
+            },
+            {
+              extend: 'csv',
+              className: 'btn btn-primary',
+              title: `unpast_result_${this._taskData?.id}`
+            },
+            {
+              extend: 'excel',
+              className: 'btn btn-primary',
+              title: `unpast_result_${this._taskData?.id}`
+            }
+          ]
+      }
     });
   }
 
   public rowClick(event: any, id: string, bicluster: Bicluster) {
     if (!this._taskData?.query.exprs) {
       // data file for task has been deleted
+      return
+    }
+    if (event.target.classList.contains('bi') || event.target.classList.contains('btn')) {
+      // button in row was clicked, do not select row
       return
     }
     const hasClass = event.target.parentNode.classList.contains('selected');

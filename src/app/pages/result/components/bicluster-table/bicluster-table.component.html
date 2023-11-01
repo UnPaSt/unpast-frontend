@@ -1,4 +1,5 @@
 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <a target="_blank" href="{{environment.api}}get_result?id={{_taskData?.id}}"><button class="btn btn-primary" type="button"><i class="bi bi-cloud-download"></i> Download</button></a>
   <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#biclusterTableOptions" aria-expanded="false" aria-controls="biclusterTableOptions"><i class="bi bi-funnel"></i> Filter</button>
   <button class="btn btn-primary" type="button" (click)="displayHeatmap()" [disabled]="(resultService.selectedBiclusters | json) === '{}' || resultService.heatmapIsLoading || !resultService.heatmapDataLoaded"><i class="bi bi-calendar3-week"></i> Heatmap</button>
   <button class="btn btn-primary" type="button" (click)="displayNetwork()" [disabled]="(resultService.selectedBiclusters | json) === '{}'"><i class="bi bi-diagram-2"></i> Network</button>
@@ -79,22 +80,26 @@
     <tr>
       <th>ID</th>
       <th>SNR</th>
-      <th>Direction</th>
-      <th>#Genes</th>
-      <th>Genes</th>
+      <th>#Features</th>
       <th>#Samples</th>
+      <th>Direction</th>
+      <th>Features</th>
       <th>Samples</th>
+      <th>up_reg</th>
+      <th>down_reg</th>
     </tr>
   </thead>
   <tbody>
     <tr role="button" *ngFor="let bicluster of _taskData?.result | keyvalue" (click)="rowClick($event, bicluster.key, bicluster.value)">
       <td>{{ bicluster.key }}</td>
-      <td>{{ bicluster.value.avgSNR }}</td>
-      <td>{{ bicluster.value.direction }}</td>
+      <td>{{ bicluster.value.SNR }}</td>
       <td>{{ bicluster.value.n_genes }}</td>
-      <td class="shortenText">{{ bicluster.value.genes }}</td>
       <td>{{ bicluster.value.n_samples }}</td>
-      <td class="shortenText">{{ bicluster.value.samples }}</td>
+      <td>{{ bicluster.value.direction }}</td>
+      <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.genes }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.genes"></app-clipboard-button>{{ bicluster.value.genes }}</td>
+      <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.samples }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.samples"></app-clipboard-button>{{ bicluster.value.samples }}</td>
+      <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.genes_up }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.genes_up"></app-clipboard-button>{{ bicluster.value.genes_up }}</td>
+      <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.genes_down }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.genes_down"></app-clipboard-button>{{ bicluster.value.genes_down }}</td>
     </tr>
   </tbody>
 </table>

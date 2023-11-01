@@ -1,0 +1,1 @@
+<button *ngIf="stringList.length" class="btn btn-link btn-sm" (click)="copyToClipboard(stringList)"><i class="bi bi-clipboard" [class.d-none]="justCopied"></i><i class="bi bi-check2" [class.d-none]="!justCopied"></i></button>

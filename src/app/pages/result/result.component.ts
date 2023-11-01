@@ -25,6 +25,8 @@ export class ResultComponent implements OnInit {
       binarization: 'GMM',
       clustering: 'DESMOND',
       r: 0,
+      dch: 0.995,
+      ds: 0,
       mail: '',
       exprs: ''
     },
@@ -38,6 +40,7 @@ export class ResultComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.key = params['key'];
+      console.log('this.key ', this.key)
       this.getTask();
     })
   }
