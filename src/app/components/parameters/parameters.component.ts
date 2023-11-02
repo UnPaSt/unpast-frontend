@@ -17,7 +17,6 @@ export class ParametersComponent implements OnInit {
     constructor(public taskService: TaskService) {
     }
 
-
     @Input() public fileName: string = "";
     @Input() public fileId: string = "";
     @Input() public name: string = "";
@@ -32,6 +31,7 @@ export class ParametersComponent implements OnInit {
     public _louvainSimilarityCutoff: number = -1;
     @Input() public set louvainSimilarityCutoff(value: number) {
         this._louvainSimilarityCutoff = value;
+        this._louvainSimilarityCutoffDisplayed = value
         if (this._louvainSimilarityCutoff == -1) {
             this.louvainSimilarityCutoffAutomatic = true;
             this.validateLouvainSimilarityCutoffAutomaticChange();
@@ -51,8 +51,11 @@ export class ParametersComponent implements OnInit {
     public paramtersValid = true;
     public isSubmitting = false;
     public _louvainSimilarityCutoffBeforeAuto: number = -1;
+    public _louvainSimilarityCutoffDisplayed: number = 0
 
     public validateParameters() {
+        console.log(this.taskForm.nativeElement.classList);
+        console.log(this.taskForm.nativeElement.classList.contains('ng-valid'));
         this.paramtersValid = this.taskForm.nativeElement.classList.contains('ng-valid');
     }
 
@@ -94,6 +97,7 @@ export class ParametersComponent implements OnInit {
     public validateLouvainSimilarityCutoffAutomaticChange() {
         if (this.louvainSimilarityCutoffAutomatic) {
             this._louvainSimilarityCutoffBeforeAuto = this._louvainSimilarityCutoff;
+            this._louvainSimilarityCutoffDisplayed = 0;
             this._louvainSimilarityCutoff = -1;
         } else {
             this.louvainSimilarityCutoff = this._louvainSimilarityCutoffBeforeAuto >= 0 && this._louvainSimilarityCutoffBeforeAuto <= 1 ? this._louvainSimilarityCutoffBeforeAuto : 0.5;
