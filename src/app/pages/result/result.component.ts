@@ -19,7 +19,7 @@ export class ResultComponent implements OnInit {
     query: {
       id: '',
       name: '',
-      seed: 0,
+      seed: 1,
       alpha: 0,
       pValue: 0,
       binarization: 'GMM',
@@ -28,7 +28,9 @@ export class ResultComponent implements OnInit {
       dch: 0.995,
       ds: 0,
       mail: '',
-      exprs: ''
+      exprs: '',
+      directions: ["BOTH"],
+      ceiling: 0
     },
   };
   public matrix: any;

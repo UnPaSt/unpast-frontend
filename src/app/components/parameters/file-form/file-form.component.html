@@ -87,7 +87,7 @@
                     <button 
                       *ngIf="fileIsUploaded && file.size === 0"
                       class="btn btn-warning"
-                      (click)="fileIsUploaded=false; delete()"
+                      (click)="fileIsUploaded=false; resetFile()"
                     >
                       New
                     </button>

@@ -92,12 +92,16 @@
           [pValue]="taskData.query.pValue"
           [selectedBinarizationMethod]="taskData.query.binarization"
           [selectedClusteringMethod]="taskData.query.clustering"
-          [r]="taskData.query.r"
+          [louvainSimilarityCutoff]="taskData.query.r"
           [email]="taskData.query.mail"
           [name]="taskData.query.name"
           [fileName]="taskData.query.exprs"
           [fileId]="taskData.query.id"
           [alreadyOnServer]="true"
+          [bidirectional]="!(taskData.query.directions[0]==='BOTH')"
+          [deepSplit]="taskData.query.ds"
+          [dynamicTreeCut]="taskData.query.dch"
+          [ceiling]="taskData.query.ceiling"
         ></app-parameters>
       </div>
     </div>

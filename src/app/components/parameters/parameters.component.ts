@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {TaskService} from 'src/app/services/task/task.service';
 import { BinarizationAlgorithm, ClusteringAlgorithm, TaskParameters } from 'src/app/interfaces';
 import { FormControl } from '@angular/forms';
@@ -9,13 +9,14 @@ import { FormControl } from '@angular/forms';
     templateUrl: './parameters.component.html',
     styleUrls: ['./parameters.component.scss']
 })
-export class ParametersComponent {
+export class ParametersComponent implements OnInit {
 
     @ViewChild('inputEmail') inputEmail!: ElementRef;
     @ViewChild('taskForm') taskForm!: ElementRef;
 
     constructor(public taskService: TaskService) {
     }
+
 
     @Input() public fileName: string = "";
     @Input() public fileId: string = "";
@@ -27,13 +28,19 @@ export class ParametersComponent {
     @Input() public pValue: number = 0.01;
     @Input() public selectedBinarizationMethod: BinarizationAlgorithm = 'kmeans';
     @Input() public selectedClusteringMethod: ClusteringAlgorithm = 'WGCNA';
-    @Input() public louvainSimilarityCutoff: number = 0;
+    @Input() public louvainSimilarityCutoff: number = -1;
     @Input() public email: string = '';
     @Input() public alreadyOnServer = false;
     @Input() public bidirectional = false; // if checked, directions = ["BOTH"], else directions = ["UP","DOWN]
     @Input() public ceiling: number = 3; // ceiling for z-scores to reduce outliers; can be >= 0
-    @Input() public louvainSimilarityCutoffAutomatic = true;
+    @Input() public louvainSimilarityCutoffAutomatic = false;
 
+    ngOnInit(): void {
+        if (this.louvainSimilarityCutoff == -1) {
+            this.louvainSimilarityCutoffAutomatic = true;
+            this.validateLouvainSimilarityCutoffAutomaticChange();
+        }
+    }
 
     public paramtersValid = true;
     public isSubmitting = false;
@@ -49,20 +56,6 @@ export class ParametersComponent {
     }
 
     public getRequestData(): TaskParameters {
-        console.log({
-            id: this.fileId,
-            name: this.name,
-            seed: this.seed,
-            alpha: this.alpha,
-            pValue: this.pValue,
-            binarization: this.selectedBinarizationMethod,
-            clustering: this.selectedClusteringMethod,
-            r: this.louvainSimilarityCutoff,
-            dch: this.dynamicTreeCut,
-            ds: this.deepSplit,
-            mail: this.email,
-            exprs: this.fileName
-        })
         return {
             id: this.fileId,
             name: this.name,
@@ -75,12 +68,15 @@ export class ParametersComponent {
             dch: this.dynamicTreeCut,
             ds: this.deepSplit,
             mail: this.email,
-            exprs: this.fileName
+            exprs: this.fileName,
+            directions: this.bidirectional ? ["DOWN", "UP"] : ["BOTH"],
+            ceiling: this.ceiling
         }
     }
 
     public async submit() {
         this.isSubmitting = true;
+        console.log(this.getRequestData())
         const taskId = await this.taskService.submitTask(this.getRequestData());
         this.taskService.triggerLandingPageFeedback(taskId);
         this.isSubmitting = false;

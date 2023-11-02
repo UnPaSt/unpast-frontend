@@ -70,6 +70,14 @@ export class FileFormComponent implements OnInit {
         this.isUploading = false;
     }
 
+    public resetFile() {
+        this.id = '';
+        this.fileIsUploaded = false;
+        this.file = { name: '', size: 0 };
+        this.displayedFileName = '';
+        this.idChange.emit('');
+    }
+
     public async delete() {
         if (!confirm('This will delete the uploaded file for all tasks. Do you want to continue?')) {
             return
@@ -77,11 +85,7 @@ export class FileFormComponent implements OnInit {
         if (this.fileIsUploaded) {
             await this.backend.deleteFile(this.id);
         }
-        this.id = '';
-        this.fileIsUploaded = false;
-        this.file = { name: '', size: 0 };
-        this.displayedFileName = '';
-        this.idChange.emit('');
+        this.resetFile();
     }
 
 }

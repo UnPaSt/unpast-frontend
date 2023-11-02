@@ -19,7 +19,9 @@ export interface TaskParameters {
     ds: 0 | 1 | 2 | 3 | 4,
     dch: number,
     mail: string,
-    exprs: string
+    exprs: string,
+    directions: string[],
+    ceiling: number
 }
 
 export interface TaskResult {
