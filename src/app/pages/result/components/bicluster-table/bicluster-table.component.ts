@@ -132,7 +132,6 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
       const term = this.value.replace(/,|;|\|/gi, function (matched) {
         return ' ';
       });
-      console.log(term)
       // @ts-ignore
       self.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         // @ts-ignore

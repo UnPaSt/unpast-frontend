@@ -165,7 +165,7 @@
             class="form-control"
             id="inputLouvainSimilarityCutoff"
             aria-describedby="inputLouvainSimilarityCutoffHelp"
-            [(ngModel)]="louvainSimilarityCutoff"
+            [(ngModel)]="_louvainSimilarityCutoff"
             name="louvainSimilarityCutoff"
             min="0"
             max="1"
@@ -180,7 +180,7 @@
           <div class="invalid-feedback">Provide a value from 0 to 1 or select 'automatic'.</div>
         </div>
         <div
-          class="col-md-2 mb-3"
+          class="col-md-2 mb-3 pt-4"
           *ngIf="selectedClusteringMethod === 'Louvain'"
         >
         <div class="form-check">
@@ -227,38 +227,35 @@
           <div class="invalid-feedback">Please choose a number >= 0.</div>
         </div>
          <div class="col-md-6 mb-3">
-          <div class="form-check form-switch form-check-inline ">
-            <label for="inputBidirectional" class="form-check-label">Bidirectional</label>
+          <div class="form-check form-switch form-check-inline ps-0">
+            <label for="inputBidirectional" class="form-check-label">Bidirectional</label><br>
             <input
               type="checkbox"
-              class="form-check-input"
+              class="form-check-input mt-1 position-relative"
               id="inputBidirectional"
               aria-describedby="inputBidirectional"
               [(ngModel)]="bidirectional"
               name="bidirectional"
               #inputBidirectional
               (change)="validateParameters()"
-            />
-
+            /><br>
             <!-- <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
             <label class="btn btn-outline-success" for="success-outlined">Both</label>
 
             <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off">
             <label class="btn btn-outline-danger" for="danger-outlined">Up & Down</label> -->
-            <div id="inputBidirectionalHelp" class="form-text">
-              info
+            <div id="inputBidirectionalHelp" class="form-text mt-3">
+              If not checked, find biclusters that are either up- or downregulated; if checked, find both.
             </div>
           </div>
         </div>
       </div>
 
-
       <hr/>
-
 
       <div clas="row">
         <div class="col-md-6 mb-3 mx-auto">
-          <label for="exampleInputPassword1" class="form-label">Seed</label>
+          <label for="inputSeed" class="form-label">Seed</label>
           <input
             type="number"
             class="form-control"
@@ -271,7 +268,7 @@
             #inputSeed
             (change)="validateParameters()"
           />
-          <div class="invalid-feedback">Provide a seed from 1 to 9999.</div>
+          <div class="invalid-feedback">Provide a number from 1 to 9999999.</div>
 
           <div id="inputSeedHelp" class="form-text">Random seed for reproducible results.</div>
         </div>

@@ -21,9 +21,7 @@ export class HeatmapComponent implements OnInit {
    public originalData: any = {};
 
    @Input() set key(value: string) {
-      console.log('set key', value)
       this.taskService.getTaskData(value).then((response: any) => {
-         console.log(response)
          if (!response) {
             return
          }

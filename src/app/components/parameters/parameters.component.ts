@@ -28,7 +28,16 @@ export class ParametersComponent implements OnInit {
     @Input() public pValue: number = 0.01;
     @Input() public selectedBinarizationMethod: BinarizationAlgorithm = 'kmeans';
     @Input() public selectedClusteringMethod: ClusteringAlgorithm = 'WGCNA';
-    @Input() public louvainSimilarityCutoff: number = -1;
+
+    public _louvainSimilarityCutoff: number = -1;
+    @Input() public set louvainSimilarityCutoff(value: number) {
+        this._louvainSimilarityCutoff = value;
+        if (this._louvainSimilarityCutoff == -1) {
+            this.louvainSimilarityCutoffAutomatic = true;
+            this.validateLouvainSimilarityCutoffAutomaticChange();
+        }
+    }
+
     @Input() public email: string = '';
     @Input() public alreadyOnServer = false;
     @Input() public bidirectional = false; // if checked, directions = ["BOTH"], else directions = ["UP","DOWN]
@@ -36,10 +45,7 @@ export class ParametersComponent implements OnInit {
     @Input() public louvainSimilarityCutoffAutomatic = false;
 
     ngOnInit(): void {
-        if (this.louvainSimilarityCutoff == -1) {
-            this.louvainSimilarityCutoffAutomatic = true;
-            this.validateLouvainSimilarityCutoffAutomaticChange();
-        }
+        this.louvainSimilarityCutoff = this._louvainSimilarityCutoff;
     }
 
     public paramtersValid = true;
@@ -64,7 +70,7 @@ export class ParametersComponent implements OnInit {
             pValue: this.pValue,
             binarization: this.selectedBinarizationMethod,
             clustering: this.selectedClusteringMethod,
-            r: this.louvainSimilarityCutoff,
+            r: this._louvainSimilarityCutoff,
             dch: this.dynamicTreeCut,
             ds: this.deepSplit,
             mail: this.email,
@@ -76,7 +82,6 @@ export class ParametersComponent implements OnInit {
 
     public async submit() {
         this.isSubmitting = true;
-        console.log(this.getRequestData())
         const taskId = await this.taskService.submitTask(this.getRequestData());
         this.taskService.triggerLandingPageFeedback(taskId);
         this.isSubmitting = false;
@@ -88,8 +93,8 @@ export class ParametersComponent implements OnInit {
 
     public validateLouvainSimilarityCutoffAutomaticChange() {
         if (this.louvainSimilarityCutoffAutomatic) {
-            this._louvainSimilarityCutoffBeforeAuto = this.louvainSimilarityCutoff;
-            this.louvainSimilarityCutoff = -1;
+            this._louvainSimilarityCutoffBeforeAuto = this._louvainSimilarityCutoff;
+            this._louvainSimilarityCutoff = -1;
         } else {
             this.louvainSimilarityCutoff = this._louvainSimilarityCutoffBeforeAuto >= 0 && this._louvainSimilarityCutoffBeforeAuto <= 1 ? this._louvainSimilarityCutoffBeforeAuto : 0.5;
         }

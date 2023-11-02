@@ -13,7 +13,6 @@ export class ExamplesComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.linkExample)
   }
 
 }

@@ -42,7 +42,6 @@ export class ResultComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.key = params['key'];
-      console.log('this.key ', this.key)
       this.getTask();
     })
   }
@@ -57,7 +56,6 @@ export class ResultComponent implements OnInit {
 
   public async checkTaskStatus() {
     if (this.taskData.status !== 'Done') {
-      console.log('updating task')
       await this.delay(5000);
       this.getTask(), 1
     }
