@@ -31,12 +31,10 @@ export class HeatmapComponent implements OnInit {
             return
          }
          this.originalData = JSON.parse(JSON.stringify(response));
-         console.log('originalData', this.originalData)
          this.formatHeatmapData(response, []);
          this.resultService.heatmapDataLoaded = true;
 
          this.originalDataZ = this.zScoreNormalizeData(this.originalData);
-         console.log('z score data', this.originalDataZ)
       })
    };
 
@@ -101,7 +99,6 @@ export class HeatmapComponent implements OnInit {
       data.values.forEach((datapoint: any) => {
          allValues.push(datapoint[2])
       });
-      console.log(allValues)
       const sum = allValues.reduce((partialSum, a) => partialSum + a, 0);
       const mean = sum / allValues.length;
       const std = Math.sqrt(allValues.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / allValues.length)
@@ -146,8 +143,6 @@ export class HeatmapComponent implements OnInit {
    }
 
    public formatHeatmapData(data: any, biclusters: Bicluster[]) {
-
-      console.log('data', data)
 
       const selectedSamples = Object.values(biclusters).map(bicluster => bicluster.samples);
       const selectedGenes = Object.values(biclusters).map(bicluster => bicluster.genes);
