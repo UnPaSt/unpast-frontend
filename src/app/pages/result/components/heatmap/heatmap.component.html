@@ -1,4 +1,18 @@
 <div class="heatmap-container" *ngIf="resultService.heatmapDataLoaded">
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+  <!-- <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#biclusterTableOptions" aria-expanded="false" aria-controls="biclusterTableOptions"><i class="bi bi-funnel"></i> Filter</button> -->
+  <div class="mb-3">
+    <label for="formFile" class="form-label">z-score normalization:</label>
+    <select class="form-select" aria-label="z-score selector" [(ngModel)]="zScoreNormalizeSelector" (ngModelChange)="updateHeatmap(biclusters)">
+      <option [ngValue]="0">off</option>
+      <option [ngValue]="1">in range [-3,3]</option>
+      <option [ngValue]="2">in range [-5,5]</option>
+    </select>
+  </div>
+
+  </div>
+
   <highcharts-chart
     [style.width.px]="chartWidth"
     [style.height.px]="chartHeight"
@@ -13,7 +27,7 @@
 
   <div class="heatmap-loading" *ngIf="resultService.heatmapIsLoading">
     <div class="heatmap-loading-background">
-      <p>
+      <p class="pt-3">
         <span
           class="spinner-border spinner-border-sm"
           role="status"

@@ -48,15 +48,20 @@ export class ResultComponent implements OnInit {
 
   public getTask() {
     this.taskService.getTask(this.key).then(response => {
+      // add id to biclusters
+      Object.entries(response.result).forEach(([key, value]: any) => {
+        value.id = key;
+      });
       this.taskData = response;
       this.taskData.query.mail = this.taskData.query.mail ? this.taskData.query.mail : '';
+
       this.checkTaskStatus();
     });
   }
 
   public async checkTaskStatus() {
     if (this.taskData.status !== 'Done') {
-      await this.delay(5000);
+      await this.delay(3000);
       this.getTask(), 1
     }
   }

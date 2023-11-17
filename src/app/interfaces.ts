@@ -44,7 +44,8 @@ export interface Bicluster {
     sample_indices: number[],
     genes_up: string[],
     genes_down: string[],
-    direction: BiclusterDirecton
+    direction: BiclusterDirecton,
+    id: string,
 }
 
 export interface Task {

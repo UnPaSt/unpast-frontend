@@ -10,99 +10,107 @@
   </h1>
 </div>
 
-<ul
-  class="nav nav-tabs mb-3 justify-content-center"
-  id="tabs-tab"
-  role="tablist"
->
-  <li class="nav-item" role="presentation">
-    <button
-      class="nav-link btn btn-secondary text-dark"
-      id="tabs-result-tab"
-      data-bs-toggle="tab"
-      data-bs-target="#tabs-result"
-      type="button"
-      role="tab"
-      aria-controls="tabs-result"
-      aria-selected="true"
-    >
-      Result
-    </button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button
-      class="nav-link active btn btn-secondary text-dark"
-      id="tabs-parameters-tab"
-      data-bs-toggle="tab" data-bs-target="#tabs-parameters" type="button" role="tab" aria-controls="home" aria-selected="true"
-    >
-      Parameters
-    </button>
-  </li>
-</ul>
-<div class="tab-content" id="tabs-tabContent">
-  <div
-    class="tab-pane fade"
-    id="tabs-result"
-    role="tabpanel"
-    aria-labelledby="tabs-result-tab"
+<div class=""> <!-- container-fluid -->
+
+  <div class="alert alert-info alert-dismissible fade show text-center" role="alert">
+    <strong>How to navigate the UnPaSt result page</strong> <p>You can find your UnPaSt results by selecting the "Result" tab below, or inspect the used parameters and start new tasks in the "Parameters" tab.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <ul
+    class="nav nav-tabs mb-3 justify-content-center"
+    id="tabs-tab"
+    role="tablist"
   >
-    <div class="container-fluid px-4 py-5 text-center" *ngIf="taskData.result">
-      <h1 class="display-8 fw-bold">Task Result</h1>
-      <div class="rows">
-        <div class="row">
-          <app-bicluster-table [taskData]="taskData"></app-bicluster-table>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link btn btn-secondary text-dark"
+        id="tabs-result-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#tabs-result"
+        type="button"
+        role="tab"
+        aria-controls="tabs-result"
+        aria-selected="true"
+      >
+        Result
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active btn btn-secondary text-dark"
+        id="tabs-parameters-tab"
+        data-bs-toggle="tab" data-bs-target="#tabs-parameters" type="button" role="tab" aria-controls="home" aria-selected="true"
+      >
+        Parameters
+      </button>
+    </li>
+  </ul>
+  <div class="tab-content" id="tabs-tabContent">
+    <div
+      class="tab-pane fade"
+      id="tabs-result"
+      role="tabpanel"
+      aria-labelledby="tabs-result-tab"
+    >
+      <div class="container-fluid px-4 py-5 text-center" *ngIf="taskData.result">
+        <h1 class="display-8 fw-bold">Task Result</h1>
+        <div class="rows">
+          <div class="row">
+            <app-bicluster-table [taskData]="taskData"></app-bicluster-table>
+          </div>
+        </div>
+
+        <a id="heatmap"></a>
+        <div
+          class="container-fluid px-4 py-5 text-center"
+          [ngClass]="{ 'd-none': !resultService.showHeatmap }"
+        >
+          <h1 class="display-10 fw-bold">Heatmap</h1>
+          <app-heatmap [key]="key"></app-heatmap>
+        </div>
+
+        <a id="network"></a>
+        <div
+          class="container-fluid px-4 py-5 text-center"
+          [ngClass]="{ 'd-none': !resultService.showNetwork }"
+        >
+          <h1 class="display-10 fw-bold">Network</h1>
+          <app-drugstone></app-drugstone>
         </div>
       </div>
 
-      <a id="heatmap"></a>
-      <div
-        class="container-fluid px-4 py-5 text-center"
-        [ngClass]="{ 'd-none': !resultService.showHeatmap }"
-      >
-        <h1 class="display-10 fw-bold">Heatmap</h1>
-        <app-heatmap [key]="key"></app-heatmap>
-      </div>
-
-      <a id="network"></a>
-      <div
-        class="container-fluid px-4 py-5 text-center"
-        [ngClass]="{ 'd-none': !resultService.showNetwork }"
-      >
-        <h1 class="display-10 fw-bold">Network</h1>
-        <app-drugstone></app-drugstone>
+      <div class="container-fluid px-4 py-5 text-center" *ngIf="!taskData.result">
+        <h1 class="display-8 fw-bold">Task not yet finished...</h1>
       </div>
     </div>
-
-    <div class="container-fluid px-4 py-5 text-center" *ngIf="!taskData.result">
-      <h1 class="display-8 fw-bold">Task not yet finished...</h1>
-    </div>
-  </div>
-  <div
-    class="tab-pane fade show active"
-    id="tabs-parameters"
-    role="tabpanel"
-    aria-labelledby="tabs-parameters-tab"
-  >
-    <div class="container-fluid px-4 py-5 text-center">
-      <h1 class="display-8 fw-bold">Task Parameters</h1>
-      <div class="col-lg-8 mx-auto">
-        <app-parameters
-          [seed]="taskData.query.seed"
-          [alpha]="taskData.query.alpha"
-          [pValue]="taskData.query.pValue"
-          [selectedBinarizationMethod]="taskData.query.binarization"
-          [selectedClusteringMethod]="taskData.query.clustering"
-          [louvainSimilarityCutoff]="taskData.query.r"
-          [email]="taskData.query.mail"
-          [name]="taskData.query.name"
-          [fileName]="taskData.query.exprs"
-          [fileId]="taskData.query.id"
-          [alreadyOnServer]="true"
-          [bidirectional]="!(taskData.query.directions[0]==='BOTH')"
-          [deepSplit]="taskData.query.ds"
-          [dynamicTreeCut]="taskData.query.dch"
-          [ceiling]="taskData.query.ceiling"
-        ></app-parameters>
+    <div
+      class="tab-pane fade show active"
+      id="tabs-parameters"
+      role="tabpanel"
+      aria-labelledby="tabs-parameters-tab"
+    >
+      <div class="container-fluid px-4 py-5 text-center">
+        <h1 class="display-8 fw-bold">Task Parameters</h1>
+        <div class="col-lg-8 mx-auto">
+          <app-parameters
+            [seed]="taskData.query.seed"
+            [alpha]="taskData.query.alpha"
+            [pValue]="taskData.query.pValue"
+            [selectedBinarizationMethod]="taskData.query.binarization"
+            [selectedClusteringMethod]="taskData.query.clustering"
+            [louvainSimilarityCutoff]="taskData.query.r"
+            [email]="taskData.query.mail"
+            [name]="taskData.query.name"
+            [fileName]="taskData.query.exprs"
+            [fileId]="taskData.query.id"
+            [alreadyOnServer]="true"
+            [bidirectional]="!(taskData.query.directions[0]==='BOTH')"
+            [deepSplit]="taskData.query.ds"
+            [dynamicTreeCut]="taskData.query.dch"
+            [ceiling]="taskData.query.ceiling"
+          ></app-parameters>
+        </div>
       </div>
     </div>
   </div>

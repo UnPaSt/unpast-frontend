@@ -73,6 +73,7 @@ export class TaskService {
 
   public async getTaskData(id: string): Promise<any> {
     const response = await this.backend.getTaskData(id);
+    console.log('task data', response)
     return response
   }
 

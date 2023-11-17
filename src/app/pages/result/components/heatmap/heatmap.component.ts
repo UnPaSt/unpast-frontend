@@ -1,11 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import * as HighchartsExporting from "highcharts/modules/exporting";
+import * as HighchartsExportData from "highcharts/modules/export-data";
 import Heatmap from 'highcharts/modules/heatmap';
 import More from 'highcharts/highcharts-more';
 import { TaskService } from 'src/app/services/task/task.service';
 import { Bicluster } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
 import { ViewportScroller } from '@angular/common';
+
+// @ts-ignore
+HighchartsExporting(Highcharts);
+// @ts-ignore
+HighchartsExportData(Highcharts);
 
 More(Highcharts);
 Heatmap(Highcharts);
@@ -18,27 +25,35 @@ Heatmap(Highcharts);
 })
 export class HeatmapComponent implements OnInit {
 
-   public originalData: any = {};
-
    @Input() set key(value: string) {
       this.taskService.getTaskData(value).then((response: any) => {
          if (!response) {
             return
          }
          this.originalData = JSON.parse(JSON.stringify(response));
+         console.log('originalData', this.originalData)
          this.formatHeatmapData(response, []);
          this.resultService.heatmapDataLoaded = true;
+
+         this.originalDataZ = this.zScoreNormalizeData(this.originalData);
+         console.log('z score data', this.originalDataZ)
       })
    };
+
+
+   public originalData: any = {};
+   public originalDataZ: any = {}; // samle as originalData but z-score normalized
+   public zScoreNormalize = true;
+   public zScoreNormalizeSelector: number = 0; // default == off
+   public biclusters: Bicluster[] = []; // selected biclusters
+
 
    public chartWidth = 800;
    public chartHeight = 800;
 
-   public matrix: any;
    public chartOptions: any = {};
    // public chartOptionsTree: any = {};
    public highcharts = Highcharts;
-   public heatmapTestData: any = [];
    public updateFlag = false;
    public chart: any;
    public self: any;
@@ -46,7 +61,7 @@ export class HeatmapComponent implements OnInit {
    public chartData = {
       columns: ['placeholder'],
       rows: ['placeholder'],
-      values: [[0, 0, 10]],
+      values: [[0, 0, 10]], // row index, column index, value
    };
 
    constructor(
@@ -59,8 +74,42 @@ export class HeatmapComponent implements OnInit {
       this.self = this;
       this.initChart();
       this.resultService._biclusterSelectedHeatmap$.subscribe((biclusters: Bicluster[]) => {
+         this.biclusters = biclusters;
          this.updateHeatmap(biclusters);
        });
+   }
+
+   public limitZScoreData(data: any, min:number, max: number) {
+      data = JSON.parse(JSON.stringify(data));
+      data.values.map((datapoint: any) => {
+         let x = datapoint[2];
+         if (x > max) {
+            x = max;
+         } else if (x < min) {
+            x = min;
+         }
+         datapoint[2] = x;
+      })
+      return data
+   }
+
+   public zScoreNormalizeData(data: any) {
+      // z = (x - mean) / std
+
+      data = JSON.parse(JSON.stringify(data));
+      const allValues: number[] = [];
+      data.values.forEach((datapoint: any) => {
+         allValues.push(datapoint[2])
+      });
+      console.log(allValues)
+      const sum = allValues.reduce((partialSum, a) => partialSum + a, 0);
+      const mean = sum / allValues.length;
+      const std = Math.sqrt(allValues.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / allValues.length)
+      data.values.map((datapoint:any) => {
+         const x = datapoint[2];
+         datapoint[2] = (x - mean) / std
+      })
+      return data
    }
 
    public chartCallback(chart: any) {
@@ -77,10 +126,22 @@ export class HeatmapComponent implements OnInit {
    }
 
    public updateHeatmap(biclusters: Bicluster[]) {
+      
       /** Wrapper of heatmap update functions to show loading */
       this.resultService.heatmapIsLoading = true;
       setTimeout(() => {
-         this.formatHeatmapData(JSON.parse(JSON.stringify(this.originalData)), biclusters);
+         if (this.zScoreNormalizeSelector == 1) {
+            const [min, max] = [-3, 3];
+            const limitedData = this.limitZScoreData(this.originalDataZ, min, max);
+            this.formatHeatmapData(limitedData, biclusters);
+         } else if (this.zScoreNormalizeSelector == 2) {
+            const [min, max] = [-5, 5];
+            const limitedData = this.limitZScoreData(this.originalDataZ, min, max);
+            this.formatHeatmapData(limitedData, biclusters);
+         } else {
+            this.formatHeatmapData(JSON.parse(JSON.stringify(this.originalData)), biclusters);
+         }
+         this.resultService.heatmapIsLoading = false;
       })
    }
 
@@ -101,6 +162,9 @@ export class HeatmapComponent implements OnInit {
       // // descending order
       // selectedColumnsIndices.sort(function(a,b){ return b - a; });
       // selectedRowsIndices.sort(function(a,b){ return b - a; });
+
+      console.log('selectedColumns', selectedColumns)
+      console.log('selectedRows', selectedRows)
 
       if (selectedColumns) {
          let columnsSorted: any = JSON.parse(JSON.stringify(selectedColumns));
@@ -143,7 +207,6 @@ export class HeatmapComponent implements OnInit {
          const column = columnLookup[value[1]];
          valuesFormatted.push([row, column, value[2]]);
       }
-
 
       data.values = valuesFormatted;
       this.chartData = data;
@@ -190,12 +253,18 @@ export class HeatmapComponent implements OnInit {
       }
       this.chartHeight = 200 + this.chartData.rows.length * 8;
       this.updateFlag = true;
-      this.resultService.heatmapIsLoading = false;
       this.scroller.scrollToAnchor('heatmap');
    }
 
    private initChart() {
       this.chartOptions = {
+         exporting: {
+            buttons: {
+               contextButton: {
+                  menuItems: ['downloadPNG', 'downloadSVG'] //  'separator'
+               }
+            }
+         },
          chart: {
             type: 'heatmap',
             marginTop: 40,
@@ -263,6 +332,10 @@ export class HeatmapComponent implements OnInit {
                   fontSize: '7px'
                }
             }
+         },
+
+         credits: {
+            enabled: false
          },
 
          legend: {
