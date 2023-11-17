@@ -165,29 +165,43 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
     });
   }
 
+  public filterAll() {
+    this.filterSNR();
+    this.filterFeatures();
+    this.filterSamples();
+  }
+
+  public filterSNR() {
+    this.activateColumnFilter(this.minAvgSNR, this.maxAvgSNR, 1);
+    this.redrawTable(true);
+  }
+
+  public filterFeatures() {
+    this.activateColumnFilter(this.minGenes, this.maxGenes, 2);
+    this.redrawTable(true);
+  }
+
+  public filterSamples() {
+    this.activateColumnFilter(this.minSamples, this.maxSamples, 3);
+    this.redrawTable(true);
+  }
+
   public clearFilterByAvgSNR() {
     this.maxAvgSNR = NaN;
     this.minAvgSNR = NaN;
-    this.filter();
-  }
-
-  public filter() {
-    this.activateColumnFilter(this.minAvgSNR, this.maxAvgSNR, 1);
-    this.activateColumnFilter(this.minGenes, this.maxGenes, 3);
-    this.activateColumnFilter(this.minSamples, this.maxSamples, 5);
-    this.redrawTable(true);
+    this.filterSNR();
   }
 
   public clearFilterByGenes() {
     this.maxGenes = NaN;
     this.minGenes = NaN;
-    this.filter();
+    this.filterFeatures();
   }
 
   public clearFilterBySamples() {
     this.maxSamples = NaN;
     this.minSamples = NaN;
-    this.filter();
+    this.filterSamples();
   }
 
   public displayHeatmap() {

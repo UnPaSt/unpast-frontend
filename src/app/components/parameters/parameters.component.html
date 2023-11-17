@@ -82,6 +82,7 @@
         </div>
         <div
           class="col-md-6 mb-3"
+          *ngIf="selectedClusteringMethod !== 'Louvain'"
         >
           <label for="inputDeepSplit" class="form-label">Deep Split</label>
           <input
@@ -104,6 +105,7 @@
         </div>
         <div
           class="col-md-6 mb-3"
+          *ngIf="selectedClusteringMethod !== 'Louvain'"
         >
           <label for="inputDynamicTree" class="form-label">Dynamic Tree Cut</label>
           <input
@@ -175,7 +177,7 @@
             (change)="validateParameters()"
           />
           <div id="inputLouvainSimilarityCutoffHelp" class="form-text">
-            Pearsons correlation cutoff for similarity matrix.
+            Minimal Jaccard index required to consider two features similarity.
           </div>
           <div class="invalid-feedback">Provide a value from 0 to 1 or select 'automatic'.</div>
         </div>
@@ -222,7 +224,7 @@
             (change)="validateParameters()"
           />
           <div id="inputCeilingHelp" class="form-text">
-            Ceiling for z-scores to reduce outliers.
+            Ceiling for z-scores to reduce outliers. 0 means no ceiling.
           </div>
           <div class="invalid-feedback">Please choose a number >= 0.</div>
         </div>

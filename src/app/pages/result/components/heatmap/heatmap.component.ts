@@ -86,6 +86,8 @@ export class HeatmapComponent implements OnInit {
 
    public formatHeatmapData(data: any, biclusters: Bicluster[]) {
 
+      console.log('data', data)
+
       const selectedSamples = Object.values(biclusters).map(bicluster => bicluster.samples);
       const selectedGenes = Object.values(biclusters).map(bicluster => bicluster.genes);
       // const selectedSamplesIndices = Object.values(biclusters).map(bicluster => bicluster.sample_indices);

@@ -31,13 +31,13 @@
       </span>
       <input class="form-control" type="number" step="any" name="maxAvgSNR" id="maxAvgSNR" [(ngModel)]="maxAvgSNR" />
 
-      <button class="btn btn-outline-primary" type="button" (click)="filter()">Apply Filter</button>
+      <button class="btn btn-outline-primary" type="button" (click)="filterSNR()">Apply Filter</button>
       <button class="btn btn-outline-danger" type="button" (click)="clearFilterByAvgSNR()">Clear</button>
     </div>
     
     <div class="input-group mb-3">
       <span class="input-group-text">
-        Filter by #Genes
+        Filter by #Features
       </span>
       <span class="input-group-text">
         Min
@@ -49,7 +49,7 @@
       </span>
       <input class="form-control" type="number" step="any" name="maxGenes" id="maxGenes" [(ngModel)]="maxGenes" />
 
-      <button class="btn btn-outline-primary" type="button" (click)="filter()">Apply Filter</button>
+      <button class="btn btn-outline-primary" type="button" (click)="filterFeatures()">Apply Filter</button>
       <button class="btn btn-outline-danger" type="button" (click)="clearFilterByGenes()">Clear</button>
     </div>
     
@@ -67,7 +67,7 @@
       </span>
       <input class="form-control" type="number" step="any" name="maxSamples" id="maxSamples" [(ngModel)]="maxSamples" />
 
-      <button class="btn btn-outline-primary" type="button" (click)="filter()">Apply Filter</button>
+      <button class="btn btn-outline-primary" type="button" (click)="filterSamples()">Apply Filter</button>
       <button class="btn btn-outline-danger" type="button" (click)="clearFilterBySamples()">Clear</button>
     </div>
   </div>
