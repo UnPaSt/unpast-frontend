@@ -106,7 +106,10 @@
       <td>{{ bicluster.value.n_genes }}</td>
       <td>{{ bicluster.value.n_samples }}</td>
       <td>{{ bicluster.value.direction }}</td>
-      <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.genes }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.genes"></app-clipboard-button>{{ bicluster.value.genes }}</td>
+      <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.genes }}" class="shortenText">
+        <app-gprofiler-button [stringList]="bicluster.value.genes"></app-gprofiler-button>
+        <app-clipboard-button [stringList]="bicluster.value.genes"></app-clipboard-button>{{ bicluster.value.genes }}
+      </td>
       <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.samples }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.samples"></app-clipboard-button>{{ bicluster.value.samples }}</td>
       <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.genes_up }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.genes_up"></app-clipboard-button>{{ bicluster.value.genes_up }}</td>
       <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ bicluster.value.genes_down }}" class="shortenText"><app-clipboard-button [stringList]="bicluster.value.genes_down"></app-clipboard-button>{{ bicluster.value.genes_down }}</td>

@@ -22,6 +22,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { BiclusterTableComponent } from './pages/result/components/bicluster-table/bicluster-table.component';
 import { DrugstoneComponent } from './pages/result/components/drugstone/drugstone.component';
 import { ClipboardButtonComponent } from './components/clipboard-button/clipboard-button.component';
+import { GprofilerButtonComponent } from './components/gprofiler-button/gprofiler-button.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { ClipboardButtonComponent } from './components/clipboard-button/clipboar
         BiclusterTableComponent,
         DrugstoneComponent,
         ClipboardButtonComponent,
+        GprofilerButtonComponent,
     ],
     imports: [
         BrowserModule,
