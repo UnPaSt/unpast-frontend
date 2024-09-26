@@ -23,6 +23,7 @@ import { BiclusterTableComponent } from './pages/result/components/bicluster-tab
 import { DrugstoneComponent } from './pages/result/components/drugstone/drugstone.component';
 import { ClipboardButtonComponent } from './components/clipboard-button/clipboard-button.component';
 import { GprofilerButtonComponent } from './components/gprofiler-button/gprofiler-button.component';
+import { CiteComponent } from './pages/cite/cite.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { GprofilerButtonComponent } from './components/gprofiler-button/gprofile
         DrugstoneComponent,
         ClipboardButtonComponent,
         GprofilerButtonComponent,
+        CiteComponent,
     ],
     imports: [
         BrowserModule,
