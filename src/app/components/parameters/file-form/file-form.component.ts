@@ -32,7 +32,7 @@ export class FileFormComponent implements OnInit {
         });
     }
 
-    private MAX_FILE_SIZE = 500; //MB
+    private MAX_FILE_SIZE = 200; //MB
 
     public fileTooLargeAlert = false;
     public fileTypeWrongAlert = false;
