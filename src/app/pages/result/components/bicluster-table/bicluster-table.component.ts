@@ -155,6 +155,7 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
 
   public redrawTable(removeFilter = false) {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // @ts-ignore - draw() method exists but may not be properly typed
       dtInstance.draw();
       if (removeFilter) {
         // remove filter

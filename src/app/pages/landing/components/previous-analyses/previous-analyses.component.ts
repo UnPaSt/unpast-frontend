@@ -59,6 +59,7 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
   public destroyTable() {
     if (this.dtElement?.dtInstance) {
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        // @ts-ignore - destroy() method exists but may not be properly typed
         dtInstance.destroy();
       })
     }
