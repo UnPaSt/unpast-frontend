@@ -265,11 +265,11 @@
             [(ngModel)]="seed"
             name="seed"
             min="0"
-            max="10000000"
+            max="2147483647"
             #inputSeed
             (change)="validateParameters()"
           />
-          <div class="invalid-feedback">Provide a number from 0 to 10000000.</div>
+          <div class="invalid-feedback">Provide a number from 0 to 2147483647.</div>
 
           <div id="inputSeedHelp" class="form-text">Random seed for reproducible results.</div>
         </div>
