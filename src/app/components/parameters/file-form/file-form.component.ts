@@ -49,7 +49,7 @@ export class FileFormComponent implements OnInit {
                 this.fileTooLargeAlert = false
             }
 
-            if (!(this.file.name.endsWith('.tsv') || this.file.name.endsWith('.txt') || this.file.name.endsWith('.gzip'))) {
+            if (!(this.file.name.endsWith('.tsv') || this.file.name.endsWith('.txt') || this.file.name.endsWith('.gzip') || this.file.name.endsWith('.gz'))) {
                 this.fileTypeWrongAlert = true;
                 return
             } else {
