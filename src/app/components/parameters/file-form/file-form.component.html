@@ -6,7 +6,7 @@
         'text-warning': !fileIsUploaded,
         'text-success': fileIsUploaded
       }"
-    >
+      >
       1. Expression matrix
       <i
         class="bi bi-info-circle text-info"
@@ -23,48 +23,63 @@
     <div class="row">
       <div class="col-md-12">
         <form [formGroup]="form">
-          <div class="form-group" *ngIf="!displayedFileName">
-            <input
-              type="file"
-              class="file-upload"
-              (change)="selectFile({ event: $event })"
-            />
-          </div>
+          @if (!displayedFileName) {
+            <div class="form-group">
+              <input
+                type="file"
+                class="file-upload"
+                (change)="selectFile({ event: $event })"
+                />
+            </div>
+          }
 
-          <div *ngIf="fileTooLargeAlert" class="alert alert-danger" role="alert">
-            The file is too large! We only allow files up to 200MB. If you have larger files, we recommend to <a target="_blank" href="https://github.com/ozolotareva/unpast_paper" >install UnPaSt locally</a>.
-          </div>
+          @if (fileTooLargeAlert) {
+            <div class="alert alert-danger" role="alert">
+              The file is too large! We only allow files up to 200MB. If you have larger files, we recommend to <a target="_blank" href="https://github.com/ozolotareva/unpast_paper" >install UnPaSt locally</a>.
+            </div>
+          }
 
-          <div *ngIf="fileTypeWrongAlert" class="alert alert-danger" role="alert">
-            The input must be a tab-separated (tsv) file with samples in columns and features in rows. It can be uploaded as a .tsv, .txt, .gz or .gzip file.
-          </div>
+          @if (fileTypeWrongAlert) {
+            <div class="alert alert-danger" role="alert">
+              The input must be a tab-separated (tsv) file with samples in columns and features in rows. It can be uploaded as a .tsv, .txt, .gz or .gzip file.
+            </div>
+          }
 
 
-          <table class="table" *ngIf="displayedFileName">
-            <thead>
-              <tr>
-                <th width="50%">Name</th>
-                <th *ngIf="file.size">Size</th>
-                <th>Status</th>
-                <th>Options</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <strong>{{ displayedFileName }}</strong>
-                </td>
-                <td *ngIf="file.size">
-                  {{ file.size / 1024 / 1024 | number: ".2" }} MB
-                </td>
-                <td class="text-center">
-                  <span *ngIf="fileIsUploaded"
-                    ><i class="bi bi-check-circle text-success"></i
-                  ></span>
-                  <span *ngIf="!fileIsUploaded"
-                    ><i class="bi bi-x-circle text-danger"></i
-                  ></span>
-                  <!-- <span *ngIf="!fileIsUploaded"
+          @if (displayedFileName) {
+            <table class="table">
+              <thead>
+                <tr>
+                  <th width="50%">Name</th>
+                  @if (file.size) {
+                    <th>Size</th>
+                  }
+                  <th>Status</th>
+                  <th>Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>{{ displayedFileName }}</strong>
+                  </td>
+                  @if (file.size) {
+                    <td>
+                      {{ file.size / 1024 / 1024 | number: ".2" }} MB
+                    </td>
+                  }
+                  <td class="text-center">
+                    @if (fileIsUploaded) {
+                      <span
+                        ><i class="bi bi-check-circle text-success"></i
+                      ></span>
+                    }
+                    @if (!fileIsUploaded) {
+                      <span
+                        ><i class="bi bi-x-circle text-danger"></i
+                      ></span>
+                    }
+                    <!-- <span *ngIf="!fileIsUploaded"
                     ><i class="bi bi-hourglass text-warning"></i
                   ></span> -->
                 </td>
@@ -75,36 +90,39 @@
                       [disabled]="isUploading || fileIsUploaded"
                       (click)="upload()"
                       type="button"
-                    >
-                      <span
-                        *ngIf="isUploading"
-                        class="spinner-border spinner-border-sm"
-                        role="status"
-                        aria-hidden="true"
-                      ></span
-                      >Upload
-                    </button>
-                    <button 
-                      *ngIf="fileIsUploaded && file.size === 0"
-                      class="btn btn-warning"
-                      (click)="fileIsUploaded=false; resetFile()"
-                    >
-                      New
-                    </button>
-                    <button
-                      [disabled]="isUploading"
-                      class="btn btn-danger"
-                      (click)="delete()"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
+                      >
+                      @if (isUploading) {
+                        <span
+                          class="spinner-border spinner-border-sm"
+                          role="status"
+                          aria-hidden="true"
+                          ></span
+                          >
+                          }Upload
+                        </button>
+                        @if (fileIsUploaded && file.size === 0) {
+                          <button
+                            class="btn btn-warning"
+                            (click)="fileIsUploaded=false; resetFile()"
+                            >
+                            New
+                          </button>
+                        }
+                        <button
+                          [disabled]="isUploading"
+                          class="btn btn-danger"
+                          (click)="delete()"
+                          >
+                          Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            }
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>

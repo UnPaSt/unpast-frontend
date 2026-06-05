@@ -4,7 +4,7 @@
     'bg-success': taskData.status === 'Done',
     'bg-warning': taskData.status !== 'Done'
   }"
->
+  >
   <h1 class="display-5 fw-bold text-white">
     Task Status: {{ taskData.status }}
   </h1>
@@ -21,7 +21,7 @@
     class="nav nav-tabs mb-3 justify-content-center"
     id="tabs-tab"
     role="tablist"
-  >
+    >
     <li class="nav-item" role="presentation">
       <button
         class="nav-link btn btn-secondary text-dark"
@@ -32,7 +32,7 @@
         role="tab"
         aria-controls="tabs-result"
         aria-selected="true"
-      >
+        >
         Result
       </button>
     </li>
@@ -41,7 +41,7 @@
         class="nav-link active btn btn-secondary text-dark"
         id="tabs-parameters-tab"
         data-bs-toggle="tab" data-bs-target="#tabs-parameters" type="button" role="tab" aria-controls="home" aria-selected="true"
-      >
+        >
         Parameters
       </button>
     </li>
@@ -52,44 +52,46 @@
       id="tabs-result"
       role="tabpanel"
       aria-labelledby="tabs-result-tab"
-    >
-      <div class="container-fluid px-4 py-5 text-center" *ngIf="taskData.result">
-        <h1 class="display-8 fw-bold">Task Result</h1>
-        <div class="rows">
-          <div class="row">
-            <app-bicluster-table [taskData]="taskData"></app-bicluster-table>
+      >
+      @if (taskData.result) {
+        <div class="container-fluid px-4 py-5 text-center">
+          <h1 class="display-8 fw-bold">Task Result</h1>
+          <div class="rows">
+            <div class="row">
+              <app-bicluster-table [taskData]="taskData"></app-bicluster-table>
+            </div>
+          </div>
+          <a id="heatmap"></a>
+          <div
+            class="container-fluid px-4 py-5 text-center"
+            [ngClass]="{ 'd-none': !resultService.showHeatmap }"
+            >
+            <h1 class="display-10 fw-bold">Heatmap</h1>
+            <app-heatmap [key]="key"></app-heatmap>
+          </div>
+          <a id="network"></a>
+          <div
+            class="container-fluid px-4 py-5 text-center"
+            [ngClass]="{ 'd-none': !resultService.showNetwork }"
+            >
+            <h1 class="display-10 fw-bold">Network</h1>
+            <app-drugstone></app-drugstone>
           </div>
         </div>
+      }
 
-        <a id="heatmap"></a>
-        <div
-          class="container-fluid px-4 py-5 text-center"
-          [ngClass]="{ 'd-none': !resultService.showHeatmap }"
-        >
-          <h1 class="display-10 fw-bold">Heatmap</h1>
-          <app-heatmap [key]="key"></app-heatmap>
+      @if (!taskData.result) {
+        <div class="container-fluid px-4 py-5 text-center">
+          <h1 class="display-8 fw-bold">Task not yet finished...</h1>
         </div>
-
-        <a id="network"></a>
-        <div
-          class="container-fluid px-4 py-5 text-center"
-          [ngClass]="{ 'd-none': !resultService.showNetwork }"
-        >
-          <h1 class="display-10 fw-bold">Network</h1>
-          <app-drugstone></app-drugstone>
-        </div>
-      </div>
-
-      <div class="container-fluid px-4 py-5 text-center" *ngIf="!taskData.result">
-        <h1 class="display-8 fw-bold">Task not yet finished...</h1>
-      </div>
+      }
     </div>
     <div
       class="tab-pane fade show active"
       id="tabs-parameters"
       role="tabpanel"
       aria-labelledby="tabs-parameters-tab"
-    >
+      >
       <div class="container-fluid px-4 py-5 text-center">
         <h1 class="display-8 fw-bold">Task Parameters</h1>
         <div class="col-lg-8 mx-auto">
