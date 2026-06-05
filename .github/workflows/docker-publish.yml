@@ -9,11 +9,11 @@ on:
  # schedule:
   #  - cron: '40 23 * * *'
   push:
-    branches: [ "main", "development"]
+    branches: [ "main", "angular-update"]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ "main", "development"]
+    branches: [ "main", "angular-update"]
 
 env:
   # Use docker.io for Docker Hub if empty
