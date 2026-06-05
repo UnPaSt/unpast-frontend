@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { ParametersComponent } from './components/parameters/parameters.component';
-import { FileUploadModule } from 'ng2-file-upload';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PreviousAnalysesComponent } from './pages/landing/components/previous-analyses/previous-analyses.component';
 import { StartTaskComponent } from './pages/landing/components/start-task/start-task.component';
@@ -48,7 +47,6 @@ import { CiteComponent } from './pages/cite/cite.component';
     imports: [
         BrowserModule,
         AppRoutingModule,
-        FileUploadModule,
         FormsModule,
         DataTablesModule,
         HighchartsChartModule,
