@@ -17,7 +17,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { ExamplesComponent } from './pages/landing/components/examples/examples.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { FileFormComponent } from './components/parameters/file-form/file-form.component';
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { BiclusterTableComponent } from './pages/result/components/bicluster-table/bicluster-table.component';
 import { DrugstoneComponent } from './pages/result/components/drugstone/drugstone.component';
 import { ClipboardButtonComponent } from './components/clipboard-button/clipboard-button.component';
@@ -25,8 +25,7 @@ import { GprofilerButtonComponent } from './components/gprofiler-button/gprofile
 import { CiteComponent } from './pages/cite/cite.component';
 
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         LandingComponent,
         ParametersComponent,
@@ -44,19 +43,13 @@ import { CiteComponent } from './pages/cite/cite.component';
         GprofilerButtonComponent,
         CiteComponent,
     ],
-    imports: [
-        BrowserModule,
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [BrowserModule,
         AppRoutingModule,
         FormsModule,
         DataTablesModule,
         HighchartsChartModule,
         NgbModule,
-        ReactiveFormsModule,
-        HttpClientModule
-    ],
-    providers: [],
-    bootstrap: [AppComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
+        ReactiveFormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {
 }
