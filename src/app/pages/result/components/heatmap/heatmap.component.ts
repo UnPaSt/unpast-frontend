@@ -39,7 +39,6 @@ export class HeatmapComponent implements OnInit {
 
    public chartOptions: any = {};
    // public chartOptionsTree: any = {};
-   public updateFlag = false;
    public chart: any;
    public self: any;
 
@@ -234,7 +233,7 @@ export class HeatmapComponent implements OnInit {
          this.chartOptions.yAxis.labels.enabled = true;
       }
       this.chartHeight = 200 + this.chartData.rows.length * 8;
-      this.updateFlag = true;
+      this.chartOptions = { ...this.chartOptions };
       this.scroller.scrollToAnchor('heatmap');
    }
 
