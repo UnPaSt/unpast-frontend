@@ -4,9 +4,10 @@ import { Bicluster } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
 
 @Component({
-  selector: 'app-drugstone',
-  templateUrl: './drugstone.component.html',
-  styleUrls: ['./drugstone.component.scss']
+    selector: 'app-drugstone',
+    templateUrl: './drugstone.component.html',
+    styleUrls: ['./drugstone.component.scss'],
+    standalone: false
 })
 export class DrugstoneComponent implements OnInit {
 

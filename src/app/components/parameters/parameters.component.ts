@@ -7,7 +7,8 @@ import { FormControl } from '@angular/forms';
 @Component({
     selector: 'app-parameters',
     templateUrl: './parameters.component.html',
-    styleUrls: ['./parameters.component.scss']
+    styleUrls: ['./parameters.component.scss'],
+    standalone: false
 })
 export class ParametersComponent implements OnInit {
 

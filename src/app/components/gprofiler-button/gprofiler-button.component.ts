@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-gprofiler-button',
-  templateUrl: './gprofiler-button.component.html',
-  styleUrls: ['./gprofiler-button.component.scss']
+    selector: 'app-gprofiler-button',
+    templateUrl: './gprofiler-button.component.html',
+    styleUrls: ['./gprofiler-button.component.scss'],
+    standalone: false
 })
 export class GprofilerButtonComponent implements OnInit {
 

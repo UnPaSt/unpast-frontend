@@ -14,14 +14,17 @@ HighchartsExporting(Highcharts);
 // @ts-ignore
 HighchartsExportData(Highcharts);
 
+// @ts-ignore
 More(Highcharts);
+// @ts-ignore
 Heatmap(Highcharts);
 
 
 @Component({
-   selector: 'app-heatmap',
-   templateUrl: './heatmap.component.html',
-   styleUrls: ['./heatmap.component.scss']
+    selector: 'app-heatmap',
+    templateUrl: './heatmap.component.html',
+    styleUrls: ['./heatmap.component.scss'],
+    standalone: false
 })
 export class HeatmapComponent implements OnInit {
 
