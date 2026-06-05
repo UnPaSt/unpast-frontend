@@ -55,8 +55,6 @@ export class ParametersComponent implements OnInit {
     public _louvainSimilarityCutoffDisplayed: number = 0
 
     public validateParameters() {
-        console.log(this.taskForm.nativeElement.classList);
-        console.log(this.taskForm.nativeElement.classList.contains('ng-valid'));
         this.paramtersValid = this.taskForm.nativeElement.classList.contains('ng-valid');
     }
 

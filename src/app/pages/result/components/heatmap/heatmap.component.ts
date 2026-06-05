@@ -144,9 +144,6 @@ export class HeatmapComponent implements OnInit {
       // selectedColumnsIndices.sort(function(a,b){ return b - a; });
       // selectedRowsIndices.sort(function(a,b){ return b - a; });
 
-      console.log('selectedColumns', selectedColumns)
-      console.log('selectedRows', selectedRows)
-
       if (selectedColumns) {
          let columnsSorted: any = JSON.parse(JSON.stringify(selectedColumns));
          columnsSorted.push(...data.columns);
