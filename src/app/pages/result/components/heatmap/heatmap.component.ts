@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import * as HighchartsExporting from "highcharts/modules/exporting";
-import * as HighchartsExportData from "highcharts/modules/export-data";
+import HighchartsExporting from "highcharts/modules/exporting";
+import HighchartsExportData from "highcharts/modules/export-data";
 import Heatmap from 'highcharts/modules/heatmap';
 import More from 'highcharts/highcharts-more';
 import { TaskService } from 'src/app/services/task/task.service';
