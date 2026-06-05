@@ -53,7 +53,12 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
 
   private setTableSettings() {
     $.extend(true, $.fn.dataTable.defaults, {
-      dom: 'PlBrtip',
+      layout: {
+        topStart: 'buttons',
+        topEnd: 'pageLength',
+        bottomStart: 'info',
+        bottomEnd: 'paging',
+      },
       pagingType: 'full_numbers',
       processing: true,
       lengthMenu: [10, 25, 50],
