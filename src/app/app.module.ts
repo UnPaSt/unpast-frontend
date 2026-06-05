@@ -13,7 +13,7 @@ import { PreviousAnalysesComponent } from './pages/landing/components/previous-a
 import { StartTaskComponent } from './pages/landing/components/start-task/start-task.component';
 import { ResultComponent } from './pages/result/result.component';
 import { HeatmapComponent } from './pages/result/components/heatmap/heatmap.component';
-import { HighchartsChartComponent } from 'highcharts-angular';
+import { HighchartsChartComponent, provideHighcharts } from 'highcharts-angular';
 import { ExamplesComponent } from './pages/landing/components/examples/examples.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { FileFormComponent } from './components/parameters/file-form/file-form.component';
@@ -50,6 +50,16 @@ import { CiteComponent } from './pages/cite/cite.component';
         DataTablesModule,
         HighchartsChartComponent,
         NgbModule,
-        ReactiveFormsModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        ReactiveFormsModule], providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHighcharts({
+            modules: () => [
+                import('highcharts/esm/modules/exporting'),
+                import('highcharts/esm/modules/export-data'),
+                import('highcharts/esm/modules/heatmap'),
+                import('highcharts/esm/highcharts-more'),
+            ]
+        })
+    ] })
 export class AppModule {
 }

@@ -1,23 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import * as Highcharts from 'highcharts';
-import HighchartsExporting from "highcharts/modules/exporting";
-import HighchartsExportData from "highcharts/modules/export-data";
-import Heatmap from 'highcharts/modules/heatmap';
-import More from 'highcharts/highcharts-more';
 import { TaskService } from 'src/app/services/task/task.service';
 import { Bicluster } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
 import { ViewportScroller } from '@angular/common';
-
-// @ts-ignore
-HighchartsExporting(Highcharts);
-// @ts-ignore
-HighchartsExportData(Highcharts);
-
-// @ts-ignore
-More(Highcharts);
-// @ts-ignore
-Heatmap(Highcharts);
 
 
 @Component({
@@ -54,7 +39,6 @@ export class HeatmapComponent implements OnInit {
 
    public chartOptions: any = {};
    // public chartOptionsTree: any = {};
-   public highcharts = Highcharts;
    public updateFlag = false;
    public chart: any;
    public self: any;
