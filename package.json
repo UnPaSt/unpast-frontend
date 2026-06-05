@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "server_dev": "ng serve --configuration=server_dev",
     "lint": "ng lint"
   },
   "private": true,
