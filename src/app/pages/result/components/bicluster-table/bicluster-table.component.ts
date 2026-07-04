@@ -7,9 +7,10 @@ import { environment } from 'src/environments/environment';
 
 
 @Component({
-  selector: 'app-bicluster-table',
-  templateUrl: './bicluster-table.component.html',
-  styleUrls: ['./bicluster-table.component.scss']
+    selector: 'app-bicluster-table',
+    templateUrl: './bicluster-table.component.html',
+    styleUrls: ['./bicluster-table.component.scss'],
+    standalone: false
 })
 export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
 
@@ -26,7 +27,7 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
   @ViewChild(DataTableDirective)
   public dtElement!: DataTableDirective;
 
-  public dtOptions: DataTables.Settings = {};
+  public dtOptions: any = {};
   public dtTrigger: Subject<any> = new Subject();
 
   public minAvgSNR: number = NaN;
@@ -52,7 +53,12 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
 
   private setTableSettings() {
     $.extend(true, $.fn.dataTable.defaults, {
-      dom: 'PlBrtip',
+      layout: {
+        topStart: 'buttons',
+        topEnd: 'pageLength',
+        bottomStart: 'info',
+        bottomEnd: 'paging',
+      },
       pagingType: 'full_numbers',
       processing: true,
       lengthMenu: [10, 25, 50],
@@ -133,7 +139,7 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
         return ' ';
       });
       // @ts-ignore
-      self.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      self.dtElement.dtInstance.then((dtInstance: any) => {
         // @ts-ignore
         dtInstance.search(term).draw();
       });
@@ -154,7 +160,7 @@ export class BiclusterTableComponent implements OnDestroy, AfterViewInit {
   }
 
   public redrawTable(removeFilter = false) {
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+    this.dtElement.dtInstance.then((dtInstance: any) => {
       // @ts-ignore - draw() method exists but may not be properly typed
       dtInstance.draw();
       if (removeFilter) {

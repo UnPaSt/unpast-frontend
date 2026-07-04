@@ -15,7 +15,7 @@
     <div
       class="col-md-4 lead"
       [ngClass]="paramtersValid ? 'text-success' : 'text-danger'"
-    >
+      >
       2. Parameters
     </div>
     <div class="col-md-8">
@@ -23,317 +23,322 @@
         <div class="col-md-6 mb-3">
           <label for="selectBinarizationMethod" class="form-label"
             >Binarization Method</label
-          >
-          <select
-            class="form-select"
-            aria-label="Binarization method"
-            id="selectBinarizationMethod"
-            [(ngModel)]="selectedBinarizationMethod"
-            name="binarization"
-            #selectBinarizationMethod
-          >
-            <option value="kmeans">kmeans</option>
-            <option value="Ward's">Ward's</option>
-            <option value="GMM">GMM</option>
-            <!-- <option value="Jenks">Jenks</option> -->
-          </select>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="inputPValue" class="form-label">P-value</label>
-          <input
-            type="number"
-            class="form-control"
-            id="inputPValue"
-            aria-describedby="inputPValueHelp"
-            [(ngModel)]="pValue"
-            min="0"
-            max="1"
-            step="any"
-            name="p-value"
-            required
-            #inputPValue
-            maxlength="-1"
-            (change)="validateParameters()"
-          />
-          <div id="inputPValueHelp" class="form-text">
-            P-value for binarization
+            >
+            <select
+              class="form-select"
+              aria-label="Binarization method"
+              id="selectBinarizationMethod"
+              [(ngModel)]="selectedBinarizationMethod"
+              name="binarization"
+              #selectBinarizationMethod
+              >
+              <option value="kmeans">kmeans</option>
+              <option value="Ward's">Ward's</option>
+              <option value="GMM">GMM</option>
+              <!-- <option value="Jenks">Jenks</option> -->
+            </select>
           </div>
-          <div class="invalid-feedback">Please provide a valid p-value.</div>
-        </div>
-
-        <hr/>
-
-        <div class="col-md-6 mb-3">
-          <label for="selectClusteringMethod" class="form-label"
-            >Clustering Method</label
-          >
-          <select
-            class="form-select"
-            aria-label="Clustering method"
-            id="selectClusteringMethod"
-            [(ngModel)]="selectedClusteringMethod"
-            name="clustering"
-            #selectClusteringMethod
-          >
-            <option value="WGCNA">WGCNA</option>
-            <!-- <option value="Louvain" selected>Louvain</option> -->
-            <!-- <option value="DESMOND">DESMOND</option> -->
-          </select>
-        </div>
-        <div
-          class="col-md-6 mb-3"
-          *ngIf="selectedClusteringMethod !== 'Louvain'"
-        >
-          <label for="inputDeepSplit" class="form-label">Deep Split</label>
-          <input
-            type="number"
-            class="form-control"
-            id="inputDeepSplit"
-            aria-describedby="inputDeepSplitHelp"
-            [(ngModel)]="deepSplit"
-            min="0"
-            max="4"
-            step="1"
-            name="deepSplit"
-            required
-            #inputDeepSplit
-            (change)="validateParameters()"
-          />
-          <div id="inputDeepSplitHelp" class="form-text">
-          </div>
-          <div class="invalid-feedback">DeepSplit must be either 0, 1, 2, 3, or 4.</div>
-        </div>
-        <div
-          class="col-md-6 mb-3"
-          *ngIf="selectedClusteringMethod !== 'Louvain'"
-        >
-          <label for="inputDynamicTree" class="form-label">Dynamic Tree Cut</label>
-          <input
-            type="number"
-            class="form-control"
-            id="inputDynamicTree"
-            aria-describedby="inputDynamicTreetHelp"
-            [(ngModel)]="dynamicTreeCut"
-            min="0"
-            max="1"
-            step="any"
-            name="dynamicTreeCut"
-            required
-            #inputDeepSplit
-            (change)="validateParameters()"
-          />
-          <div id="inputDynamicTreeCutHelp" class="form-text">
-          </div>
-          <div class="invalid-feedback">Provide a value from 0 to 1.</div>
-        </div>
-        <div
-          class="col-md-6 mb-3"
-          *ngIf="selectedClusteringMethod === 'DESMOND'"
-        >
-          <label for="inputAlpha" class="form-label">Alpha</label>
-          <input
-            type="number"
-            class="form-control"
-            id="inputAlpha"
-            aria-describedby="inputAlphaHelp"
-            [(ngModel)]="alpha"
-            min="0"
-            max="100"
-            step="any"
-            name="alpha"
-            required
-            #inputAlpha
-            (change)="validateParameters()"
-          />
-          <div id="inputAlphaHelp" class="form-text">
-            Alpha value influences the purity of the clustes. A higher value
-            leads to less similar elements in clusters. For more details 
-            <a
-              href="https://academic.oup.com/bioinformatics/article/37/12/1691/6039116?login=true"
-              target="_blank"
-              >click here</a
-            >.
-          </div>
-          <div class="invalid-feedback">Provide a value from 0 to 100.</div>
-        </div>
-        <div
-          class="col-md-4 mb-3"
-          *ngIf="selectedClusteringMethod === 'Louvain'"
-        >
-          <label for="inputLouvainSimilarityCutoff" class="form-label">Similarity cutoff</label>
-          <input
-            [attr.disabled]="louvainSimilarityCutoffAutomatic ? '' : null"
-            type="number"
-            class="form-control"
-            id="inputLouvainSimilarityCutoff"
-            aria-describedby="inputLouvainSimilarityCutoffHelp"
-            [(ngModel)]="_louvainSimilarityCutoffDisplayed"
-            name="louvainSimilarityCutoff"
-            min="0"
-            max="1"
-            step="any"
-            [attr.required]="!louvainSimilarityCutoffAutomatic" 
-            #inputLouvainSimilarityCutoff
-            (change)="validateParameters()"
-          />
-          <div id="inputLouvainSimilarityCutoffHelp" class="form-text">
-            Minimal Jaccard index required to consider two features similarity.
-          </div>
-          <div class="invalid-feedback">Provide a value from 0 to 1 or select 'automatic'.</div>
-        </div>
-        <div
-          class="col-md-2 mb-3 pt-4"
-          *ngIf="selectedClusteringMethod === 'Louvain'"
-        >
-        <div class="form-check">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            id="inputLouvainSimilarityCutoffAutomatic"
-            aria-describedby="inputLouvainSimilarityCutoffAutomaticHelp"
-            [(ngModel)]="louvainSimilarityCutoffAutomatic"
-            name="louvainSimilarityCutoffAutomatic"
-            #inputLouvainSimilarityCutoffAutomatic
-            (change)="validateLouvainSimilarityCutoffAutomaticChange()"
-          />
-          <div id="inputLouvainSimilarityCutoffAutomaticHelp" class="form-text" (click)="validateParameters()">
-            automatic
-          </div>
-          </div>
-        </div>
-      </div>
-
-      <hr/>
-
-      <div class="row">
-       
-        <div class="col-md-6 mb-3">
-          <label for="inputCeiling" class="form-check-label">Ceiling</label>
-          <input
-            type="number"
-            class="form-control"
-            id="inputCeiling"
-            aria-describedby="inputCeilingHelp"
-            [(ngModel)]="ceiling"
-            name="ceiling"
-            min="0"
-            max="9999999999"
-            step="any"
-            required
-            #inputCeiling
-            (change)="validateParameters()"
-          />
-          <div id="inputCeilingHelp" class="form-text">
-            Ceiling for z-scores to reduce outliers. 0 means no ceiling.
-          </div>
-          <div class="invalid-feedback">Please choose a number >= 0.</div>
-        </div>
-         <div class="col-md-6 mb-3">
-          <div class="form-check form-switch form-check-inline ps-0">
-            <label for="inputBidirectional" class="form-check-label">Bidirectional</label><br>
+          <div class="col-md-6 mb-3">
+            <label for="inputPValue" class="form-label">P-value</label>
             <input
-              type="checkbox"
-              class="form-check-input mt-1 position-relative"
-              id="inputBidirectional"
-              aria-describedby="inputBidirectional"
-              [(ngModel)]="bidirectional"
-              name="bidirectional"
-              #inputBidirectional
-            /><br>
-            <!-- <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
-            <label class="btn btn-outline-success" for="success-outlined">Both</label>
+              type="number"
+              class="form-control"
+              id="inputPValue"
+              aria-describedby="inputPValueHelp"
+              [(ngModel)]="pValue"
+              min="0"
+              max="1"
+              step="any"
+              name="p-value"
+              required
+              #inputPValue
+              maxlength="-1"
+              (change)="validateParameters()"
+              />
+            <div id="inputPValueHelp" class="form-text">
+              P-value for binarization
+            </div>
+            <div class="invalid-feedback">Please provide a valid p-value.</div>
+          </div>
 
-            <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off">
-            <label class="btn btn-outline-danger" for="danger-outlined">Up & Down</label> -->
-            <div id="inputBidirectionalHelp" class="form-text mt-3">
-              If not checked, find biclusters that are either up- or downregulated; if checked, find both.
+          <hr/>
+
+          <div class="col-md-6 mb-3">
+            <label for="selectClusteringMethod" class="form-label"
+              >Clustering Method</label
+              >
+              <select
+                class="form-select"
+                aria-label="Clustering method"
+                id="selectClusteringMethod"
+                [(ngModel)]="selectedClusteringMethod"
+                name="clustering"
+                #selectClusteringMethod
+                >
+                <option value="WGCNA">WGCNA</option>
+                <!-- <option value="Louvain" selected>Louvain</option> -->
+                <!-- <option value="DESMOND">DESMOND</option> -->
+              </select>
+            </div>
+            @if (selectedClusteringMethod !== 'Louvain') {
+              <div
+                class="col-md-6 mb-3"
+                >
+                <label for="inputDeepSplit" class="form-label">Deep Split</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="inputDeepSplit"
+                  aria-describedby="inputDeepSplitHelp"
+                  [(ngModel)]="deepSplit"
+                  min="0"
+                  max="4"
+                  step="1"
+                  name="deepSplit"
+                  required
+                  #inputDeepSplit
+                  (change)="validateParameters()"
+                  />
+                <div id="inputDeepSplitHelp" class="form-text">
+                </div>
+                <div class="invalid-feedback">DeepSplit must be either 0, 1, 2, 3, or 4.</div>
+              </div>
+            }
+            @if (selectedClusteringMethod !== 'Louvain') {
+              <div
+                class="col-md-6 mb-3"
+                >
+                <label for="inputDynamicTree" class="form-label">Dynamic Tree Cut</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="inputDynamicTree"
+                  aria-describedby="inputDynamicTreetHelp"
+                  [(ngModel)]="dynamicTreeCut"
+                  min="0"
+                  max="1"
+                  step="any"
+                  name="dynamicTreeCut"
+                  required
+                  #inputDeepSplit
+                  (change)="validateParameters()"
+                  />
+                <div id="inputDynamicTreeCutHelp" class="form-text">
+                </div>
+                <div class="invalid-feedback">Provide a value from 0 to 1.</div>
+              </div>
+            }
+            @if (selectedClusteringMethod === 'DESMOND') {
+              <div
+                class="col-md-6 mb-3"
+                >
+                <label for="inputAlpha" class="form-label">Alpha</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="inputAlpha"
+                  aria-describedby="inputAlphaHelp"
+                  [(ngModel)]="alpha"
+                  min="0"
+                  max="100"
+                  step="any"
+                  name="alpha"
+                  required
+                  #inputAlpha
+                  (change)="validateParameters()"
+                  />
+                <div id="inputAlphaHelp" class="form-text">
+                  Alpha value influences the purity of the clustes. A higher value
+                  leads to less similar elements in clusters. For more details
+                  <a
+                    href="https://academic.oup.com/bioinformatics/article/37/12/1691/6039116?login=true"
+                    target="_blank"
+                    >click here</a
+                    >.
+                  </div>
+                  <div class="invalid-feedback">Provide a value from 0 to 100.</div>
+                </div>
+              }
+              @if (selectedClusteringMethod === 'Louvain') {
+                <div
+                  class="col-md-4 mb-3"
+                  >
+                  <label for="inputLouvainSimilarityCutoff" class="form-label">Similarity cutoff</label>
+                  <input
+                    [attr.disabled]="louvainSimilarityCutoffAutomatic ? '' : null"
+                    type="number"
+                    class="form-control"
+                    id="inputLouvainSimilarityCutoff"
+                    aria-describedby="inputLouvainSimilarityCutoffHelp"
+                    [(ngModel)]="_louvainSimilarityCutoffDisplayed"
+                    name="louvainSimilarityCutoff"
+                    min="0"
+                    max="1"
+                    step="any"
+                    [attr.required]="!louvainSimilarityCutoffAutomatic"
+                    #inputLouvainSimilarityCutoff
+                    (change)="validateParameters()"
+                    />
+                  <div id="inputLouvainSimilarityCutoffHelp" class="form-text">
+                    Minimal Jaccard index required to consider two features similarity.
+                  </div>
+                  <div class="invalid-feedback">Provide a value from 0 to 1 or select 'automatic'.</div>
+                </div>
+              }
+              @if (selectedClusteringMethod === 'Louvain') {
+                <div
+                  class="col-md-2 mb-3 pt-4"
+                  >
+                  <div class="form-check">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="inputLouvainSimilarityCutoffAutomatic"
+                      aria-describedby="inputLouvainSimilarityCutoffAutomaticHelp"
+                      [(ngModel)]="louvainSimilarityCutoffAutomatic"
+                      name="louvainSimilarityCutoffAutomatic"
+                      #inputLouvainSimilarityCutoffAutomatic
+                      (change)="validateLouvainSimilarityCutoffAutomaticChange()"
+                      />
+                    <div id="inputLouvainSimilarityCutoffAutomaticHelp" class="form-text" (click)="validateParameters()">
+                      automatic
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <hr/>
+
+            <div class="row">
+
+              <div class="col-md-6 mb-3">
+                <label for="inputCeiling" class="form-check-label">Ceiling</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="inputCeiling"
+                  aria-describedby="inputCeilingHelp"
+                  [(ngModel)]="ceiling"
+                  name="ceiling"
+                  min="0"
+                  max="9999999999"
+                  step="any"
+                  required
+                  #inputCeiling
+                  (change)="validateParameters()"
+                  />
+                <div id="inputCeilingHelp" class="form-text">
+                  Ceiling for z-scores to reduce outliers. 0 means no ceiling.
+                </div>
+                <div class="invalid-feedback">Please choose a number >= 0.</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-check form-switch form-check-inline ps-0">
+                  <label for="inputBidirectional" class="form-check-label">Bidirectional</label><br>
+                  <input
+                    type="checkbox"
+                    class="form-check-input mt-1 position-relative"
+                    id="inputBidirectional"
+                    aria-describedby="inputBidirectional"
+                    [(ngModel)]="bidirectional"
+                    name="bidirectional"
+                    #inputBidirectional
+                    /><br>
+                    <!-- <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
+                    <label class="btn btn-outline-success" for="success-outlined">Both</label>
+
+                    <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off">
+                    <label class="btn btn-outline-danger" for="danger-outlined">Up & Down</label> -->
+                    <div id="inputBidirectionalHelp" class="form-text mt-3">
+                      If not checked, find biclusters that are either up- or downregulated; if checked, find both.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <hr/>
+
+              <div clas="row">
+                <div class="col-md-6 mb-3 mx-auto">
+                  <label for="inputSeed" class="form-label">Seed</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="inputSeed"
+                    aria-describedby="inputSeedHelp"
+                    [(ngModel)]="seed"
+                    name="seed"
+                    min="0"
+                    max="2147483647"
+                    #inputSeed
+                    (change)="validateParameters()"
+                    />
+                  <div class="invalid-feedback">Provide a number from 0 to 2147483647.</div>
+
+                  <div id="inputSeedHelp" class="form-text">Random seed for reproducible results.</div>
+                </div>
+              </div>
+
+              <div clas="row">
+                <div class="col-md-12 mb-3 mx-auto">
+                  <label for="inputTaskName" class="form-label">Task Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputTaskName"
+                    aria-describedby="taskNameHelp"
+                    name="taskName"
+                    [(ngModel)]="name"
+                    maxlength="100"
+                    #taskName
+                    (change)="validateParameters()"
+                    />
+                  <div class="invalid-feedback">Provide a valid string.</div>
+                  <div id="taskNameHelp" class="form-text">Task name to recognize the task.</div>
+                </div>
+              </div>
+
             </div>
           </div>
-        </div>
-      </div>
+          <hr />
 
-      <hr/>
-
-      <div clas="row">
-        <div class="col-md-6 mb-3 mx-auto">
-          <label for="inputSeed" class="form-label">Seed</label>
-          <input
-            type="number"
-            class="form-control"
-            id="inputSeed"
-            aria-describedby="inputSeedHelp"
-            [(ngModel)]="seed"
-            name="seed"
-            min="0"
-            max="2147483647"
-            #inputSeed
-            (change)="validateParameters()"
-          />
-          <div class="invalid-feedback">Provide a number from 0 to 2147483647.</div>
-
-          <div id="inputSeedHelp" class="form-text">Random seed for reproducible results.</div>
-        </div>
-      </div>
-
-      <div clas="row">
-        <div class="col-md-12 mb-3 mx-auto">
-          <label for="inputTaskName" class="form-label">Task Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputTaskName"
-            aria-describedby="taskNameHelp"
-            name="taskName"
-            [(ngModel)]="name"
-            maxlength="100"
-            #taskName
-            (change)="validateParameters()"
-          />
-          <div class="invalid-feedback">Provide a valid string.</div>
-          <div id="taskNameHelp" class="form-text">Task name to recognize the task.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <hr />
-
-  <div class="row">
-    <div
-      class="col-md-4 lead mb-3"
+          <div class="row">
+            <div
+              class="col-md-4 lead mb-3"
       [ngClass]="{
         'text-success': validateEmail(email),
         'text-danger': email && !validateEmail(email)
       }"
-    >
-      3. Email address (optional)
-      <i
-        class="bi bi-info-circle text-info"
-        placement="top"
-        ngbTooltip="The email address will only be used to notify you upon finalization of the task."
-      ></i>
-    </div>
-    <div class="col-md-8 mb-3">
-      <input
-        #inputEmail
-        type="email"
-        class="form-control"
-        id="email"
-        [(ngModel)]="email"
-        placeholder="email@domain.com"
-        name="email"
-      />
-      <div class="invalid-feedback">Provide a valid email address.</div>
-    </div>
-  </div>
-  <div class="col-12">
-    <button
-      type="submit"
-      class="btn btn-success"
-      (click)="submit()"
-      [disabled]="!(paramtersValid && fileId)"
-    >
-      Submit
-    </button>
-  </div>
-</form>
+              >
+              3. Email address (optional)
+              <i
+                class="bi bi-info-circle text-info"
+                placement="top"
+                ngbTooltip="The email address will only be used to notify you upon finalization of the task."
+              ></i>
+            </div>
+            <div class="col-md-8 mb-3">
+              <input
+                #inputEmail
+                type="email"
+                class="form-control"
+                id="email"
+                [(ngModel)]="email"
+                placeholder="email@domain.com"
+                name="email"
+                />
+              <div class="invalid-feedback">Provide a valid email address.</div>
+            </div>
+          </div>
+          <div class="col-12">
+            <button
+              type="submit"
+              class="btn btn-success"
+              (click)="submit()"
+              [disabled]="!(paramtersValid && fileId)"
+              >
+              Submit
+            </button>
+          </div>
+        </form>

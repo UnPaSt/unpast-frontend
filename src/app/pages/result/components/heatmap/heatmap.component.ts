@@ -1,27 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
-import * as Highcharts from 'highcharts';
-import * as HighchartsExporting from "highcharts/modules/exporting";
-import * as HighchartsExportData from "highcharts/modules/export-data";
-import Heatmap from 'highcharts/modules/heatmap';
-import More from 'highcharts/highcharts-more';
 import { TaskService } from 'src/app/services/task/task.service';
 import { Bicluster } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
 import { ViewportScroller } from '@angular/common';
 
-// @ts-ignore
-HighchartsExporting(Highcharts);
-// @ts-ignore
-HighchartsExportData(Highcharts);
-
-More(Highcharts);
-Heatmap(Highcharts);
-
 
 @Component({
-   selector: 'app-heatmap',
-   templateUrl: './heatmap.component.html',
-   styleUrls: ['./heatmap.component.scss']
+    selector: 'app-heatmap',
+    templateUrl: './heatmap.component.html',
+    styleUrls: ['./heatmap.component.scss'],
+    standalone: false
 })
 export class HeatmapComponent implements OnInit {
 
@@ -51,8 +39,6 @@ export class HeatmapComponent implements OnInit {
 
    public chartOptions: any = {};
    // public chartOptionsTree: any = {};
-   public highcharts = Highcharts;
-   public updateFlag = false;
    public chart: any;
    public self: any;
 
@@ -158,9 +144,6 @@ export class HeatmapComponent implements OnInit {
       // selectedColumnsIndices.sort(function(a,b){ return b - a; });
       // selectedRowsIndices.sort(function(a,b){ return b - a; });
 
-      console.log('selectedColumns', selectedColumns)
-      console.log('selectedRows', selectedRows)
-
       if (selectedColumns) {
          let columnsSorted: any = JSON.parse(JSON.stringify(selectedColumns));
          columnsSorted.push(...data.columns);
@@ -247,7 +230,7 @@ export class HeatmapComponent implements OnInit {
          this.chartOptions.yAxis.labels.enabled = true;
       }
       this.chartHeight = 200 + this.chartData.rows.length * 8;
-      this.updateFlag = true;
+      this.chartOptions = { ...this.chartOptions };
       this.scroller.scrollToAnchor('heatmap');
    }
 

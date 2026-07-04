@@ -6,7 +6,8 @@ import { BackendControllerService } from 'src/app/services/backend-controller/ba
 @Component({
     selector: 'app-file-form',
     templateUrl: './file-form.component.html',
-    styleUrls: ['./file-form.component.scss']
+    styleUrls: ['./file-form.component.scss'],
+    standalone: false
 })
 export class FileFormComponent implements OnInit {
 

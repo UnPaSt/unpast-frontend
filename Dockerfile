@@ -1,6 +1,7 @@
-FROM node:14.15.4-alpine3.12 as build-stage
+FROM node:22-alpine as build-stage
 COPY package.json /app/
 COPY package-lock.json /app/
+COPY .npmrc /app/
 
 WORKDIR /app/
 

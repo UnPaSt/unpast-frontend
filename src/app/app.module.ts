@@ -8,17 +8,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { ParametersComponent } from './components/parameters/parameters.component';
-import { FileUploadModule } from 'ng2-file-upload';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { PreviousAnalysesComponent } from './pages/landing/components/previous-analyses/previous-analyses.component';
 import { StartTaskComponent } from './pages/landing/components/start-task/start-task.component';
 import { ResultComponent } from './pages/result/result.component';
 import { HeatmapComponent } from './pages/result/components/heatmap/heatmap.component';
-import { HighchartsChartModule } from 'highcharts-angular';
+import { HighchartsChartComponent, provideHighcharts } from 'highcharts-angular';
 import { ExamplesComponent } from './pages/landing/components/examples/examples.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { FileFormComponent } from './components/parameters/file-form/file-form.component';
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { BiclusterTableComponent } from './pages/result/components/bicluster-table/bicluster-table.component';
 import { DrugstoneComponent } from './pages/result/components/drugstone/drugstone.component';
 import { ClipboardButtonComponent } from './components/clipboard-button/clipboard-button.component';
@@ -26,8 +25,7 @@ import { GprofilerButtonComponent } from './components/gprofiler-button/gprofile
 import { CiteComponent } from './pages/cite/cite.component';
 
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         LandingComponent,
         ParametersComponent,
@@ -45,20 +43,23 @@ import { CiteComponent } from './pages/cite/cite.component';
         GprofilerButtonComponent,
         CiteComponent,
     ],
-    imports: [
-        BrowserModule,
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [BrowserModule,
         AppRoutingModule,
-        FileUploadModule,
         FormsModule,
         DataTablesModule,
-        HighchartsChartModule,
+        HighchartsChartComponent,
         NgbModule,
-        ReactiveFormsModule,
-        HttpClientModule
-    ],
-    providers: [],
-    bootstrap: [AppComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
+        ReactiveFormsModule], providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHighcharts({
+            modules: () => [
+                import('highcharts/esm/modules/exporting'),
+                import('highcharts/esm/modules/export-data'),
+                import('highcharts/esm/modules/heatmap'),
+                import('highcharts/esm/highcharts-more'),
+            ]
+        })
+    ] })
 export class AppModule {
 }

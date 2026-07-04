@@ -7,7 +7,8 @@ import { FormControl } from '@angular/forms';
 @Component({
     selector: 'app-parameters',
     templateUrl: './parameters.component.html',
-    styleUrls: ['./parameters.component.scss']
+    styleUrls: ['./parameters.component.scss'],
+    standalone: false
 })
 export class ParametersComponent implements OnInit {
 
@@ -54,8 +55,6 @@ export class ParametersComponent implements OnInit {
     public _louvainSimilarityCutoffDisplayed: number = 0
 
     public validateParameters() {
-        console.log(this.taskForm.nativeElement.classList);
-        console.log(this.taskForm.nativeElement.classList.contains('ng-valid'));
         this.paramtersValid = this.taskForm.nativeElement.classList.contains('ng-valid');
     }
 

@@ -1,42 +1,41 @@
-<div class="heatmap-container" *ngIf="resultService.heatmapDataLoaded">
-
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-  <!-- <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#biclusterTableOptions" aria-expanded="false" aria-controls="biclusterTableOptions"><i class="bi bi-funnel"></i> Filter</button> -->
-  <div class="mb-3">
-    <label for="formFile" class="form-label">z-score normalization:</label>
-    <select class="form-select" aria-label="z-score selector" [(ngModel)]="zScoreNormalizeSelector" (ngModelChange)="updateHeatmap(biclusters)">
-      <option [ngValue]="0">off</option>
-      <option [ngValue]="1">in range [-3,3]</option>
-      <option [ngValue]="2">in range [-5,5]</option>
-    </select>
-  </div>
-
-  </div>
-
-  <highcharts-chart
-    [style.width.px]="chartWidth"
-    [style.height.px]="chartHeight"
-    [Highcharts]="highcharts"
-    [options]="chartOptions"
-    [(update)]="updateFlag"
-    [callbackFunction]="chartCallback"
-    style="display: block"
-    class="float-start"
-  >
-  </highcharts-chart>
-
-  <div class="heatmap-loading" *ngIf="resultService.heatmapIsLoading">
-    <div class="heatmap-loading-background">
-      <p class="pt-3">
-        <span
-          class="spinner-border spinner-border-sm"
-          role="status"
-          aria-hidden="true"
-        ></span
-        >&nbsp;Loading...
-      </p>
+@if (resultService.heatmapDataLoaded) {
+  <div class="heatmap-container">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <!-- <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#biclusterTableOptions" aria-expanded="false" aria-controls="biclusterTableOptions"><i class="bi bi-funnel"></i> Filter</button> -->
+      <div class="mb-3">
+        <label for="formFile" class="form-label">z-score normalization:</label>
+        <select class="form-select" aria-label="z-score selector" [(ngModel)]="zScoreNormalizeSelector" (ngModelChange)="updateHeatmap(biclusters)">
+          <option [ngValue]="0">off</option>
+          <option [ngValue]="1">in range [-3,3]</option>
+          <option [ngValue]="2">in range [-5,5]</option>
+        </select>
+      </div>
     </div>
-  </div>
-</div>
+    <highcharts-chart
+      [style.width.px]="chartWidth"
+      [style.height.px]="chartHeight"
+      [options]="chartOptions"
+      style="display: block"
+      class="float-start"
+      >
+    </highcharts-chart>
+    @if (resultService.heatmapIsLoading) {
+      <div class="heatmap-loading">
+        <div class="heatmap-loading-background">
+          <p class="pt-3">
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+              ></span
+              >&nbsp;Loading...
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  }
 
-<div *ngIf="!resultService.heatmapDataLoaded">Data file was deleted.</div>
+  @if (!resultService.heatmapDataLoaded) {
+    <div>Data file was deleted.</div>
+  }

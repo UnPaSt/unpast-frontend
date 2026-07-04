@@ -5,16 +5,17 @@ import { Task } from 'src/app/interfaces';
 import { TaskService } from 'src/app/services/task/task.service';
 
 @Component({
-  selector: 'app-previous-analyses',
-  templateUrl: './previous-analyses.component.html',
-  styleUrls: ['./previous-analyses.component.scss']
+    selector: 'app-previous-analyses',
+    templateUrl: './previous-analyses.component.html',
+    styleUrls: ['./previous-analyses.component.scss'],
+    standalone: false
 })
 export class PreviousAnalysesComponent implements OnInit, OnDestroy {
 
   @ViewChild(DataTableDirective)
   public dtElement!: DataTableDirective;
 
-  public dtOptions: DataTables.Settings = {};
+  public dtOptions: any = {};
   public dtTrigger: Subject<any> = new Subject();
   
   public taskList: Task[] = [];
@@ -58,7 +59,7 @@ export class PreviousAnalysesComponent implements OnInit, OnDestroy {
 
   public destroyTable() {
     if (this.dtElement?.dtInstance) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      this.dtElement.dtInstance.then((dtInstance: any) => {
         // @ts-ignore - destroy() method exists but may not be properly typed
         dtInstance.destroy();
       })

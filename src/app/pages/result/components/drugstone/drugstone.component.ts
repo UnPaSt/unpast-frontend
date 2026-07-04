@@ -4,9 +4,10 @@ import { Bicluster } from 'src/app/interfaces';
 import { ResultServiceService } from 'src/app/services/result/result-service.service';
 
 @Component({
-  selector: 'app-drugstone',
-  templateUrl: './drugstone.component.html',
-  styleUrls: ['./drugstone.component.scss']
+    selector: 'app-drugstone',
+    templateUrl: './drugstone.component.html',
+    styleUrls: ['./drugstone.component.scss'],
+    standalone: false
 })
 export class DrugstoneComponent implements OnInit {
 
@@ -30,7 +31,6 @@ export class DrugstoneComponent implements OnInit {
     const nodeList: any[] = [];
     for (let i: number = 0; i < biclusters.length; i++) {
       const bicluster = biclusters[i];
-      console.log(bicluster)
       const biclusterName = `Bicluster ${bicluster.id}`;
       // only 20 colors, repeat colors if more than 20 biclusters are selected
       const color = this.biclusterColors.length > i ? this.biclusterColors[i] : this.biclusterColors[i - this.biclusterColors.length];
